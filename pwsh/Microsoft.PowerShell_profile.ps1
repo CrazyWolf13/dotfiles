@@ -158,6 +158,9 @@ Write-Host "OhMyPosh injected" -ForegroundColor Green
 
 
 $Deferred = {
+    #Load Custom Functions
+    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
+    #Load Functions
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
     # Create profile if not exists
     if (-not (Test-Path -Path $PROFILE)) {
