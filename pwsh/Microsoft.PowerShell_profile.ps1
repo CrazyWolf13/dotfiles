@@ -3,7 +3,7 @@ $canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds
 $configPath = "$HOME\pwsh_custom_config.yml"
 $githubUser = "CrazyWolf13"
 $name= "Tobias"
-$OhMyPoshConfig = "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/customisation/montys.omp.json"
+$OhMyPoshConfig = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/customisation/montys.omp.json"
 $font="FiraCode" # Font-Display and variable Name, name the same as font_folder
 $font_url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip" # Put here the URL of the font file that should be installed
 $fontFileName = "FiraCodeNerdFontMono-Regular.ttf" # Put here the font file that should be installed
@@ -149,6 +149,7 @@ if (-not $?) { Write-Host "💭 Make sure to install WingetCommandNotFound by MS
 # Inject OhMyPosh
 Write-Host "Check last"
 oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
+Write-Host "OhMyPosh injected" -ForegroundColor Green
 
 
 # ----------------------------------------------------------
