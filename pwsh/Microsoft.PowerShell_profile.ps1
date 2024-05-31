@@ -3,7 +3,7 @@ $canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds
 $configPath = "$HOME\pwsh_custom_config.yml"
 $githubUser = "CrazyWolf13"
 $name= "Tobias"
-$OhMyPoshConfig = "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/montys.omp.json"
+$OhMyPoshConfig = "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/customisation/montys.omp.json"
 $font="FiraCode" # Font-Display and variable Name, name the same as font_folder
 $font_url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip" # Put here the URL of the font file that should be installed
 $fontFileName = "FiraCodeNerdFontMono-Regular.ttf" # Put here the font file that should be installed
@@ -33,18 +33,18 @@ function Initialize-DevEnv {
     Write-Host "✅ Imported $importedModuleCount modules successfully." -ForegroundColor Green
     if ($ohmyposh_installed -ne "True") { 
         Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/pwsh_helper.ps1" -UseBasicParsing).Content
+        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         Test-ohmyposh 
         }
         $font_installed_var = "${font}_installed"
     if (((Get-Variable -Name $font_installed_var).Value) -ne "True") {
         Write-Host "⚡ Invoking helper-script" -ForegroundColor Yellow
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/pwsh_helper.ps1" -UseBasicParsing).Content
+        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         Test-$font
         }
     if ($vscode_installed -ne "True") { 
         Write-Host "⚡ Invoking Custom_Functions-Script" -ForegroundColor Yellow
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/custom_functions.ps1" -UseBasicParsing).Content
+        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
         Test-vscode 
         }
     
@@ -156,18 +156,18 @@ oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
 
 
 $Deferred = {
-    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/functions.ps1" -UseBasicParsing).Content
+    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
     # Create profile if not exists
     if (-not (Test-Path -Path $PROFILE)) {
         New-Item -ItemType File -Path $PROFILE | Out-Null
-        Add-Content -Path $PROFILE -Value "iex (iwr `https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/Microsoft.PowerShell_profile.ps1`).Content"
+        Add-Content -Path $PROFILE -Value "iex (iwr `https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1`).Content"
         Write-Host "PowerShell profile created at $PROFILE." -ForegroundColor Yellow
     }
     
     # Update PowerShell in the background
     Start-Job -ScriptBlock {
         Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/pwsh_helper.ps1" -UseBasicParsing).Content
+        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         Update-PowerShell 
     } > $null 2>&1
 }
