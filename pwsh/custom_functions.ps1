@@ -87,3 +87,16 @@ function Send-Wastebin {
     }
 }
 Set-Alias -Name ptw -Value Send-Wastebin
+
+function Test-vscode {
+    if (Test-CommandExists code) {
+        Set-ConfigValue -Key "vscode_installed" -Value "True"
+    } else {
+        $installVSCode = Read-Host "Do you want to install Visual Studio Code? (Y/N)"
+        if ($installVSCode -eq 'Y' -or $installVSCode -eq 'y') {
+            winget install Microsoft.VisualStudioCode --accept-package-agreements --accept-source-agreements
+        } else {
+            Write-Host "❌ Visual Studio Code installation skipped." -ForegroundColor Yellow
+        }
+    }
+}

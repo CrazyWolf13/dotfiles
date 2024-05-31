@@ -2,12 +2,16 @@
 $canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
 $configPath = "$HOME\pwsh_custom_config.yml"
 $githubUser = "CrazyWolf13"
-$name= ""
-$OhMyPoshConfig = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/multiverse-neon.omp.json"
+$name= "Tobias"
+$OhMyPoshConfig = "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/montys.omp.json"
+$font="FiraCode" # Font-Display and variable Name, name the same as font_folder
+$font_url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip" # Put here the URL of the font file that should be installed
+$fontFileName = "FiraCodeNerdFontMono-Regular.ttf" # Put here the font file that should be installed
+$font_folder = "FiraCode" # Put here the name of the zip folder, but without the .zip extension.
 
 function Initialize-DevEnv {
     if (-not $global:canConnectToGitHub) {
-        Write-Host "❌ Skipping Dev Environment Initialization due to GitHub.com not responding within 1 second." -ForegroundColor Red
+        Write-Host "❌ Skipping dev-environment initialization due to GitHub.com not responding within 1 second." -ForegroundColor Red
         return
     }
     $modules = @(
@@ -27,23 +31,24 @@ function Initialize-DevEnv {
         }
     }
     Write-Host "✅ Imported $importedModuleCount modules successfully." -ForegroundColor Green
-    if ($vscode_installed -ne "True") { 
-        Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/pwsh_helper.ps1" -UseBasicParsing).Content
-        Test-vscode 
-    }
     if ($ohmyposh_installed -ne "True") { 
         Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/pwsh_helper.ps1" -UseBasicParsing).Content
         Test-ohmyposh 
         }
-    if ($FiraCode_installed -ne "True") {
-        Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
+        $font_installed_var = "${font}_installed"
+    if (((Get-Variable -Name $font_installed_var).Value) -ne "True") {
+        Write-Host "⚡ Invoking helper-script" -ForegroundColor Yellow
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/pwsh_helper.ps1" -UseBasicParsing).Content
-        Test-firacode 
+        Test-$font
+        }
+    if ($vscode_installed -ne "True") { 
+        Write-Host "⚡ Invoking Custom_Functions-Script" -ForegroundColor Yellow
+        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/custom_functions.ps1" -UseBasicParsing).Content
+        Test-vscode 
         }
     
-    Write-Host "✅ Successfully initialized Pwsh with all Modules and applications`n" -ForegroundColor Green
+    Write-Host "✅ Successfully initialized Pwsh with all modules and applications`n" -ForegroundColor Green
 }
 
 # Function to create config file
@@ -52,7 +57,7 @@ function Install-Config {
         New-Item -ItemType File -Path $configPath | Out-Null
         Write-Host "Configuration file created at $configPath ❗" -ForegroundColor Yellow
     } else {
-        Write-Host "✅ Successfully loaded Config file" -ForegroundColor Green
+        Write-Host "✅ Successfully loaded config file" -ForegroundColor Green
     }
     Initialize-Keys
     Initialize-DevEnv
@@ -114,12 +119,12 @@ function Initialize-Module {
             Write-Error "❌ Failed to install module ${moduleName}: $_"
         }
     } else {
-        Write-Host "❌ Skipping Module Initialization check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
+        Write-Host "❌ Skipping Module initialization check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
     }
 }
 
 function Initialize-Keys {
-    $keys = "Terminal-Icons_installed", "Powershell-Yaml_installed", "PoshFunctions_installed", "FiraCode_installed", "vscode_installed", "ohmyposh_installed"
+    $keys = "Terminal-Icons_installed", "Powershell-Yaml_installed", "PoshFunctions_installed", "${font}_installed", "vscode_installed", "ohmyposh_installed"
     foreach ($key in $keys) {
         $value = Get-ConfigValue -Key $key
         Set-Variable -Name $key -Value $value -Scope Global
@@ -139,26 +144,23 @@ Install-Config
 
 # Try to import MS PowerToys WinGetCommandNotFound
 Import-Module -Name Microsoft.WinGet.CommandNotFound > $null 2>&1
-if (-not $?) { Write-Host "💭 Make sure to install WingetCommandNotFound by MS Powertoys" -ForegroundColor Yellow }
+if (-not $?) { Write-Host "💭 Make sure to install WingetCommandNotFound by MS PowerToys" -ForegroundColor Yellow }
 
 # Inject OhMyPosh
 oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
 
 
-
 # ----------------------------------------------------------
-#Deferred loading
+# Deferred loading
 # ----------------------------------------------------------
 
 
 $Deferred = {
-    # Source my custom functions
-    if ($name -eq "Tobias") {Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/custom_functions.ps1" -UseBasicParsing).Content}
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/functions.ps1" -UseBasicParsing).Content
     # Create profile if not exists
     if (-not (Test-Path -Path $PROFILE)) {
         New-Item -ItemType File -Path $PROFILE | Out-Null
-        Add-Content -Path $PROFILE -Value "iex (iwr `https://raw.githubusercontent.com/$githubUser/unix-pwshs/main/Microsoft.PowerShell_profile.ps1`).Content"
+        Add-Content -Path $PROFILE -Value "iex (iwr `https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/Microsoft.PowerShell_profile.ps1`).Content"
         Write-Host "PowerShell profile created at $PROFILE." -ForegroundColor Yellow
     }
     
