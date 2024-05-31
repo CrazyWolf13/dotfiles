@@ -99,6 +99,8 @@ The PowerShell profile includes aliases and functions that mimic common Linux co
 ## Contributing 🤝
 - Feel free to fork, modify, and contribute improvements or additional features.
 - For any issues, questions, or help, please create an issue in the repository. 💬
+- Huge thanks to fsackur for the awesome Deferred-loading guide:
+> [https://fsackur.github.io/2023/11/20/Deferred-profile-loading-for-better-performance](https://fsackur.github.io/2023/11/20/Deferred-profile-loading-for-better-performance/)
 
 ## Personalization 🎨
 - Customize the scripts according to personal preferences or specific system requirements.
