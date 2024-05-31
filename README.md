@@ -14,6 +14,12 @@
 
 # Private PowerShell Configuration 🖥️
 
+Thanks for the interest in my personal pwsh profile for linux-like feeling on windows powershell.
+**This is my private repo, intended for myself only.**
+But I'm maintaining a public version as well, which is basically the same.
+
+You can find it here: [https://github.com/CrazyWolf13/unix-pwsh](https://github.com/CrazyWolf13/unix-pwsh)
+
 ## TL:DR
 - Paste this into your PowerShell and then into your $PROFILE using `notepad $PROFILE`:
 ```bash
