@@ -146,7 +146,7 @@ Import-Module -Name Microsoft.WinGet.CommandNotFound > $null 2>&1
 if (-not $?) { Write-Host "💭 Make sure to install WingetCommandNotFound by MS PowerToys" -ForegroundColor Yellow }
 
 # Inject OhMyPosh
-
+oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
 
 # ----------------------------------------------------------
 # Deferred loading
@@ -154,7 +154,6 @@ if (-not $?) { Write-Host "💭 Make sure to install WingetCommandNotFound by MS
 
 
 $Deferred = {
-    oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
     #Load Custom Functions
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
     #Load Functions
