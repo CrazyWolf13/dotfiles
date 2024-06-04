@@ -44,6 +44,7 @@ function Initialize-DevEnv {
         }
     if ($vscode_installed -ne "True") { 
         Write-Host "⚡ Invoking Custom_Functions-Script" -ForegroundColor Yellow
+        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
         Test-vscode 
         }
