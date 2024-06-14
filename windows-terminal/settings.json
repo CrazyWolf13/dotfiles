@@ -44,10 +44,12 @@
     {
         "defaults": 
         {
+            "adjustIndistinguishableColors": "indexed",
             "font": 
             {
                 "face": "FiraCode Nerd Font Mono"
             },
+            "opacity": 95,
             "useAtlasEngine": true
         },
         "list": 
@@ -79,7 +81,7 @@
                 "antialiasingMode": "grayscale",
                 "closeOnExit": "automatic",
                 "colorScheme": "Campbell",
-                "commandline": "C:\\Program Files\\PowerShell\\7\\pwsh.exe -c ssh pi@192.168.1.111",
+                "commandline": "powershell.exe -c ssh pi@192.168.1.111",
                 "cursorShape": "bar",
                 "elevate": false,
                 "font": 
@@ -173,7 +175,7 @@
                 "antialiasingMode": "grayscale",
                 "closeOnExit": "automatic",
                 "colorScheme": "Campbell",
-                "commandline": "C:\\Program Files\\PowerShell\\7\\pwsh.exe -c ssh root_docker@10.10.20.7",
+                "commandline": "powershell.exe -c ssh root_docker@10.10.20.7",
                 "cursorShape": "bar",
                 "elevate": false,
                 "font": 
@@ -196,7 +198,7 @@
                 "antialiasingMode": "grayscale",
                 "closeOnExit": "automatic",
                 "colorScheme": "Campbell",
-                "commandline": "C:\\Program Files\\PowerShell\\7\\pwsh.exe -c ssh root@10.50.20.10",
+                "commandline": "powershell.exe -c ssh root@10.50.20.10",
                 "cursorShape": "bar",
                 "elevate": false,
                 "font": 
@@ -219,7 +221,7 @@
                 "antialiasingMode": "grayscale",
                 "closeOnExit": "automatic",
                 "colorScheme": "Campbell",
-                "commandline": "C:\\Program Files\\PowerShell\\7\\pwsh.exe -c ssh tobias@10.10.20.8",
+                "commandline": "powershell.exe -c ssh tobias@10.10.20.8",
                 "cursorShape": "bar",
                 "elevate": false,
                 "font": 
@@ -242,7 +244,7 @@
                 "antialiasingMode": "grayscale",
                 "closeOnExit": "automatic",
                 "colorScheme": "Campbell",
-                "commandline": "C:\\Program Files\\PowerShell\\7\\pwsh.exe -c ssh tobias@192.168.1.52",
+                "commandline": "powershell.exe -c ssh tobias@192.168.1.52",
                 "cursorShape": "bar",
                 "elevate": false,
                 "font": 
