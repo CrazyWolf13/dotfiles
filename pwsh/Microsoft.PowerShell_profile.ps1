@@ -132,6 +132,11 @@ function Initialize-Keys {
     }
 }
 
+function Run-UpdatePowershell {
+    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+    Update-Powershell
+}
+
 # -------------
 # Run section
 
