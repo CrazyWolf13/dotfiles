@@ -21,11 +21,6 @@ function gitpush {
     git push
 }
 
-function ssh-m122 {
-    param ([string]$ip)
-    ssh -i ~\.ssh\06-student.pem -o ServerAliveInterval=30 "ubuntu@$ip"
-}
-
 # Send any file/pipe or text to the Wastebin(Pastebin alternative) Server
 function Send-Wastebin {
     [CmdletBinding()]
