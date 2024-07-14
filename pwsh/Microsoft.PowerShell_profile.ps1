@@ -19,10 +19,9 @@ $modules = @(
 
 # -----------------------------------------------------------------------------
 
-if (-not $global:canConnectToGitHub) {
-    Write-Host "❌ Skipping Dev-Environment initialization due to GitHub.com not responding within 1 second." -ForegroundColor Red
-    exit
-}
+Write-Host ""
+Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
+Write-Host ""
 
 if (-not (Test-Path -Path $xConfigPath)) {
     # Check if the Master config file exists, if so skip every other check.
@@ -33,6 +32,11 @@ if (-not (Test-Path -Path $xConfigPath)) {
     }
 } else {
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
+    # If there is no internet connection, we cannot install anything.
+    if (-not $global:canConnectToGitHub) {
+        Write-Host "❌ Skipping Dev-Environment initialization due to GitHub.com not responding within 1 second." -ForegroundColor Red
+        exit
+    }
     Initialize-DevEnv
     Install-Config
 }
@@ -41,14 +45,6 @@ function Run-UpdatePowershell {
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
     Update-Powershell
 }
-
-# -------------
-# Run section
-
-Write-Host ""
-Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
-Write-Host ""
-
 
 # Try to import MS PowerToys WinGetCommandNotFound
 Import-Module -Name Microsoft.WinGet.CommandNotFound > $null 2>&1
@@ -63,16 +59,21 @@ oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
 
 
 $Deferred = {
-    #Load Custom Functions
-    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
-    #Load Functions
-    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
-    # Update PowerShell in the background
-    Start-Job -ScriptBlock {
-        Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-        Update-PowerShell 
-    } > $null 2>&1
+    if ($global:canConnectToGitHub) {
+        #Load Custom Functions
+        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
+        #Load Functions
+        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
+        # Update PowerShell in the background
+        Start-Job -ScriptBlock {
+            Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
+            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+            Update-PowerShell 
+        } > $null 2>&1
+    } else {
+        Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
+        exit
+    }
 }
 
 
