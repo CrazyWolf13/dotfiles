@@ -1,3 +1,11 @@
+if (-not (Get-Command pwsh -ErrorAction SilentlyContinue)) {
+    Write-Host "PowerShell Core (pwsh) is not installed. Starting the update..." -ForegroundColor Yellow
+    Run-UpdatePowershell
+    Start-Sleep -Seconds 8 # Wait for the update to finish
+    Write-Host "Restarting the installation script with Powershell Core" -ForegroundColor Green
+    Start-Process pwsh -ArgumentList "-NoExit", "-Command . Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1' -UseBasicParsing).Content"
+}
+
 # Create $PATH folder if not exists.
 if (-not (Test-Path -Path (Split-Path -Path $PROFILE -Parent))) {
     New-Item -ItemType Directory -Path (Split-Path -Path $PROFILE -Parent) -Force | Out-Null
