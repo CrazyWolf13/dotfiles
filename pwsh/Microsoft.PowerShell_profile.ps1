@@ -1,5 +1,17 @@
 # Define vars.
-$canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 4 # Check Internet and exit if it takes longer than 1 second
+# Check Internet and exit if it takes longer than 4 second
+# Define vars.
+$canConnectToGitHub = $false
+try {
+    $request = [System.Net.WebRequest]::Create("http://github.com")
+    $request.Timeout = 4000 # 4 seconds in milliseconds
+    $response = $request.GetResponse()
+    $canConnectToGitHub = $true
+    $response.Close()
+} catch {
+    $canConnectToGitHub = $false
+}
+
 $configPath = "$HOME\pwsh_custom_config.yml"
 $xConfigPath = "$HOME\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
 $githubUser = "CrazyWolf13"
@@ -34,7 +46,7 @@ if (Test-Path -Path $xConfigPath) {
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
     # If there is no internet connection, we cannot install anything.
     if (-not $global:canConnectToGitHub) {
-        Write-Host "❌ Skipping Dev-Environment initialization due to GitHub.com not responding within 1 second." -ForegroundColor Red
+        Write-Host "❌ Skipping initialization due to GitHub not responding within 4 second." -ForegroundColor Red
         exit
     }
     Initialize-DevEnv
