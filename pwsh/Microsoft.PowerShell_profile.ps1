@@ -23,7 +23,7 @@ Write-Host ""
 Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
 Write-Host ""
 
-if (-not (Test-Path -Path $xConfigPath)) {
+if (Test-Path -Path $xConfigPath) {
     # Check if the Master config file exists, if so skip every other check.
     Write-Host "✅ Successfully initialized Pwsh with all modules and applications`n" -ForegroundColor Green
     foreach ($module in $modules) {
