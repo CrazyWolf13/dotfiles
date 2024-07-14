@@ -1,5 +1,9 @@
-# Check Internet and exit if it takes longer than 4 second
-$canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 4
+# Check internet access
+$timeout = 1000 
+$pingResult = Get-WmiObject -Query "Select * from Win32_PingStatus where Address='github.com' and Timeout=$timeout"
+if ($pingResult.StatusCode -eq 0) {$canConnectToGitHub = $true} 
+else {$canConnectToGitHub = $false}
+
 # Define vars.
 $configPath = "$HOME\pwsh_custom_config.yml"
 $xConfigPath = "$HOME\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
