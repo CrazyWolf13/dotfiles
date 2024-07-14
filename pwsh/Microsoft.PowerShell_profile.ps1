@@ -1,135 +1,39 @@
-# Check Internet and exit if it takes longer than 1 second
-$canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1
+# Define vars.
+$canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1 # Check Internet and exit if it takes longer than 1 second
 $configPath = "$HOME\pwsh_custom_config.yml"
+$xConfigPath = "$HOME\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
 $githubUser = "CrazyWolf13"
 $name= "Tobias"
+$promptColor = "DarkCyan" # Choose a color in which the hello text is colored; All Colors: Black, Blue, Cyan, DarkBlue, DarkCyan, DarkGray, DarkGreen, DarkMagenta, DarkRed, DarkYellow, Gray, Green, Magenta, Red, White, Yellow.
 $OhMyPoshConfig = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/customisation/montys.omp.json"
 $font="FiraCode" # Font-Display and variable Name, name the same as font_folder
 $font_url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip" # Put here the URL of the font file that should be installed
 $fontFileName = "FiraCodeNerdFontMono-Regular.ttf" # Put here the font file that should be installed
 $font_folder = "FiraCode" # Put here the name of the zip folder, but without the .zip extension.
+$modules = @( 
+    # This is a list of modules that need to be imported / installed
+    @{ Name = "Terminal-Icons"; ConfigKey = "Terminal-Icons_installed" },
+    @{ Name = "Powershell-Yaml"; ConfigKey = "Powershell-Yaml_installed" },
+    @{ Name = "PoshFunctions"; ConfigKey = "PoshFunctions_installed" }
+)
 
-function Initialize-DevEnv {
-    if (-not $global:canConnectToGitHub) {
-        Write-Host "❌ Skipping dev-environment initialization due to GitHub.com not responding within 1 second." -ForegroundColor Red
-        return
-    }
-    $modules = @(
-        @{ Name = "Terminal-Icons"; ConfigKey = "Terminal-Icons_installed" },
-        @{ Name = "Powershell-Yaml"; ConfigKey = "Powershell-Yaml_installed" },
-        @{ Name = "PoshFunctions"; ConfigKey = "PoshFunctions_installed" }
-    )
-    $importedModuleCount = 0
-    foreach ($module in $modules) {
-        $isInstalled = Get-ConfigValue -Key $module.ConfigKey
-        if ($isInstalled -ne "True") {
-            Write-Host "Initializing $($module.Name) module..."
-            Initialize-Module $module.Name
-        } else {
-            Import-Module $module.Name
-            $importedModuleCount++
-        }
-    }
-    Write-Host "✅ Imported $importedModuleCount modules successfully." -ForegroundColor Green
-    if ($ohmyposh_installed -ne "True") { 
-        Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-        Test-ohmyposh 
-        }
-        $font_installed_var = "${font}_installed"
-    if (((Get-Variable -Name $font_installed_var).Value) -ne "True") {
-        Write-Host "⚡ Invoking helper-script" -ForegroundColor Yellow
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-        Test-$font
-        }
-    if ($vscode_installed -ne "True") { 
-        Write-Host "⚡ Invoking Custom_Functions-Script" -ForegroundColor Yellow
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
-        Test-vscode 
-        }
-    
+# -----------------------------------------------------------------------------
+
+if (-not $global:canConnectToGitHub) {
+    Write-Host "❌ Skipping Dev-Environment initialization due to GitHub.com not responding within 1 second." -ForegroundColor Red
+    exit
+}
+
+if (-not (Test-Path -Path $xConfigPath)) {
+    # Check if the Master config file exists, if so skip every other check.
     Write-Host "✅ Successfully initialized Pwsh with all modules and applications`n" -ForegroundColor Green
-}
-
-# Function to create config file
-function Install-Config {
-    if (-not (Test-Path -Path $configPath)) {
-        New-Item -ItemType File -Path $configPath | Out-Null
-        Write-Host "Configuration file created at $configPath ❗" -ForegroundColor Yellow
-    } else {
-        Write-Host "✅ Successfully loaded config file" -ForegroundColor Green
+    foreach ($module in $modules) {
+        # As the master config exists, we assume that all modules are installed.
+        Import-Module $module.Name
     }
-    Initialize-Keys
+} else {
+    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
     Initialize-DevEnv
-}
-
-# Function to set a value in the config file
-function Set-ConfigValue {
-    param (
-        [string]$Key,
-        [string]$Value
-    )
-    $config = @{}
-    # Try to load the existing config file content
-    if (Test-Path -Path $configPath) {
-        $content = Get-Content $configPath -Raw
-        if (-not [string]::IsNullOrEmpty($content)) {
-            $config = $content | ConvertFrom-Yaml
-        }
-    }
-    # Ensure $config is a hashtable
-    if (-not $config) {
-        $config = @{}
-    }
-    $config[$Key] = $Value
-    $config | ConvertTo-Yaml | Set-Content $configPath
-    # Write-Host "Set '$Key' to '$Value' in configuration file." -ForegroundColor Green
-    Initialize-Keys
-}
-
-# Function to get a value from the config file
-function Get-ConfigValue {
-    param (
-        [string]$Key
-    )
-    $config = @{}
-    # Try to load the existing config file content
-    if (Test-Path -Path $configPath) {
-        $content = Get-Content $configPath -Raw
-        if (-not [string]::IsNullOrEmpty($content)) {
-            $config = $content | ConvertFrom-Yaml
-        }
-    }
-    # Ensure $config is a hashtable
-    if (-not $config) {
-        $config = @{}
-    }
-    return $config[$Key]
-}
-
-function Initialize-Module {
-    param (
-        [string]$moduleName
-    )
-    if ($global:canConnectToGitHub) {
-        try {
-            Install-Module -Name $moduleName -Scope CurrentUser -SkipPublisherCheck
-            Set-ConfigValue -Key "${moduleName}_installed" -Value "True"
-        } catch {
-            Write-Error "❌ Failed to install module ${moduleName}: $_"
-        }
-    } else {
-        Write-Host "❌ Skipping Module initialization check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
-    }
-}
-
-function Initialize-Keys {
-    $keys = "Terminal-Icons_installed", "Powershell-Yaml_installed", "PoshFunctions_installed", "${font}_installed", "vscode_installed", "ohmyposh_installed"
-    foreach ($key in $keys) {
-        $value = Get-ConfigValue -Key $key
-        Set-Variable -Name $key -Value $value -Scope Global
-    }
 }
 
 function Run-UpdatePowershell {
@@ -141,10 +45,8 @@ function Run-UpdatePowershell {
 # Run section
 
 Write-Host ""
-Write-Host "Welcome $name ⚡" -ForegroundColor DarkCyan
+Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
 Write-Host ""
-#All Colors: Black, Blue, Cyan, DarkBlue, DarkCyan, DarkGray, DarkGreen, DarkMagenta, DarkRed, DarkYellow, Gray, Green, Magenta, Red, White, Yellow.
-
 
 Install-Config
 # Try to import MS PowerToys WinGetCommandNotFound
@@ -164,13 +66,6 @@ $Deferred = {
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
     #Load Functions
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
-    # Create profile if not exists
-    if (-not (Test-Path -Path $PROFILE)) {
-        New-Item -ItemType File -Path $PROFILE | Out-Null
-        Add-Content -Path $PROFILE -Value "iex (iwr `https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1`).Content"
-        Write-Host "PowerShell profile created at $PROFILE." -ForegroundColor Yellow
-    }
-    
     # Update PowerShell in the background
     Start-Job -ScriptBlock {
         Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
