@@ -1,5 +1,5 @@
 # Define vars.
-$canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 1 # Check Internet and exit if it takes longer than 1 second
+$canConnectToGitHub = Test-Connection github.com -Count 1 -Quiet -TimeoutSeconds 4 # Check Internet and exit if it takes longer than 1 second
 $configPath = "$HOME\pwsh_custom_config.yml"
 $xConfigPath = "$HOME\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
 $githubUser = "CrazyWolf13"
