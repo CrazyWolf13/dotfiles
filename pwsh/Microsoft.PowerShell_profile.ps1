@@ -24,6 +24,12 @@ Write-Host ""
 Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
 Write-Host ""
 
+function Run-UpdatePowershell {
+    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+    Update-Powershell
+}
+
+# Check for dependencies and if not chainload the installer.
 if (Test-Path -Path $xConfigPath) {
     # Check if the Master config file exists, if so skip every other check.
     Write-Host "✅ Successfully initialized Pwsh with all modules and applications`n" -ForegroundColor Green
@@ -32,19 +38,16 @@ if (Test-Path -Path $xConfigPath) {
         Import-Module $module.Name
     }
 } else {
-    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
     # If there is no internet connection, we cannot install anything.
     if (-not $global:canConnectToGitHub) {
         Write-Host "❌ Skipping initialization due to GitHub not responding within 4 second." -ForegroundColor Red
         exit
     }
+    . (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
+    Test-Pwsh 
+    Test-CreateProfile
     Initialize-DevEnv
     Install-Config
-}
-
-function Run-UpdatePowershell {
-    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-    Update-Powershell
 }
 
 # Try to import MS PowerToys WinGetCommandNotFound

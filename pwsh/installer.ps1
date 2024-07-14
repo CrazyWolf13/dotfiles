@@ -1,20 +1,24 @@
-if (-not (Get-Command pwsh -ErrorAction SilentlyContinue)) {
-    Write-Host "PowerShell Core (pwsh) is not installed. Starting the update..." -ForegroundColor Yellow
-    Run-UpdatePowershell
-    Start-Sleep -Seconds 8 # Wait for the update to finish
-    Write-Host "Restarting the installation script with Powershell Core" -ForegroundColor Green
-    Start-Process pwsh -ArgumentList "-NoExit", "-Command . Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1' -UseBasicParsing).Content"
+function Test-Pwsh {
+    if (-not (Get-Command pwsh -ErrorAction SilentlyContinue)) {
+        Write-Host "PowerShell Core (pwsh) is not installed. Starting the update..." -ForegroundColor Yellow
+        Run-UpdatePowershell
+        Start-Sleep -Seconds 8 # Wait for the update to finish
+        Write-Host "Restarting the installation script with Powershell Core" -ForegroundColor Green
+        Start-Process pwsh -ArgumentList "-NoExit", "-Command . Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1' -UseBasicParsing).Content"
+    }
 }
 
-# Create $PATH folder if not exists.
-if (-not (Test-Path -Path (Split-Path -Path $PROFILE -Parent))) {
-    New-Item -ItemType Directory -Path (Split-Path -Path $PROFILE -Parent) -Force | Out-Null
-}
-# Create profile if not exists
-if (-not (Test-Path -Path $PROFILE)) {
-    New-Item -ItemType File -Path $PROFILE | Out-Null
-    Add-Content -Path $PROFILE -Value "iex (iwr `https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1`).Content"
-    Write-Host "PowerShell profile created at $PROFILE." -ForegroundColor Yellow
+function Test-CreateProfile {
+    # Create $PATH folder if not exists.
+    if (-not (Test-Path -Path (Split-Path -Path $PROFILE -Parent))) {
+        New-Item -ItemType Directory -Path (Split-Path -Path $PROFILE -Parent) -Force | Out-Null
+    }
+    # Create profile if not exists
+    if (-not (Test-Path -Path $PROFILE)) {
+        New-Item -ItemType File -Path $PROFILE | Out-Null
+        Add-Content -Path $PROFILE -Value "iex (iwr `https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1`).Content"
+        Write-Host "PowerShell profile created at $PROFILE." -ForegroundColor Yellow
+    }
 }
 
 function Initialize-DevEnv {
