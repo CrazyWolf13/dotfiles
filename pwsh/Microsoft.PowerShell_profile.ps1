@@ -34,6 +34,7 @@ if (-not (Test-Path -Path $xConfigPath)) {
 } else {
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
     Initialize-DevEnv
+    Install-Config
 }
 
 function Run-UpdatePowershell {
@@ -48,7 +49,7 @@ Write-Host ""
 Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
 Write-Host ""
 
-Install-Config
+
 # Try to import MS PowerToys WinGetCommandNotFound
 Import-Module -Name Microsoft.WinGet.CommandNotFound > $null 2>&1
 if (-not $?) { Write-Host "💭 Make sure to install WingetCommandNotFound by MS PowerToys" -ForegroundColor Yellow }
