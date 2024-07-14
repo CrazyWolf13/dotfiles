@@ -1,3 +1,7 @@
+# Create $PATH folder if not exists.
+if (-not (Test-Path -Path (Split-Path -Path $PROFILE -Parent))) {
+    New-Item -ItemType Directory -Path (Split-Path -Path $PROFILE -Parent) -Force | Out-Null
+}
 # Create profile if not exists
 if (-not (Test-Path -Path $PROFILE)) {
     New-Item -ItemType File -Path $PROFILE | Out-Null
