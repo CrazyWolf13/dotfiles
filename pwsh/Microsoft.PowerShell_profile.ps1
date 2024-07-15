@@ -21,6 +21,15 @@ $modules = @(
     @{ Name = "Terminal-Icons"; ConfigKey = "Terminal-Icons_installed" },
     @{ Name = "PoshFunctions"; ConfigKey = "PoshFunctions_installed" }
 )
+$infoMessage = @"
+To fully utilize the custom Unix-pwsh profile, please follow these steps:
+1. Set Windows Terminal as the default terminal.
+2. Choose PowerShell Core as the preferred startup profile in Windows Terminal.
+3. Go to Settings > Defaults > Appearance > Font and select the Nerd Font.
+
+These steps are necessary to ensure the pwsh profile works as intended.
+If you have further questions, on how to set the above, don't hesitate to ask me, by filing an issue on my repository, after you tried searching the web for yourself.
+"@
 
 # -----------------------------------------------------------------------------
 
@@ -52,6 +61,8 @@ if (Test-Path -Path $xConfigPath) {
     Test-CreateProfile
     Initialize-DevEnv
     Install-Config
+    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+    $null = Show-MessageBox $infoMessage 'Important Notice' -Buttons OK -Icon Information
 }
 
 # Try to import MS PowerToys WinGetCommandNotFound
@@ -158,13 +169,3 @@ $Wrapper = {
 }
 
 $null = $Powershell.AddScript($Wrapper.ToString()).BeginInvoke()
-
-
-
-
-# -----------------------------------------------------------------------------
-# TODO
-# Add notice at the end
-# Set the Font
-# Set pwsh as term
-# set WT as terminal
