@@ -42,7 +42,7 @@ function Initialize-DevEnv {
         if ($isInstalled -ne "True") {
             Write-Host "Initializing $($module.Name) module..."
             Initialize-Module $module.Name
-            if (module.Name -eq "PowershellYaml") {
+            if ($($module.Name) -eq "PowershellYaml") {
                 # Check if we can already use ConvertTo-Yaml
                 if (-not (Test-CommandExists ConvertTo-Yaml)) {
                     Write-Host "Restarting installer to make Powershell-Yaml available." -ForegroundColor Yellow

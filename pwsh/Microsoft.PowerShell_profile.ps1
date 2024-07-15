@@ -17,8 +17,8 @@ $fontFileName = "FiraCodeNerdFontMono-Regular.ttf" # Put here the font file that
 $font_folder = "FiraCode" # Put here the name of the zip folder, but without the .zip extension.
 $modules = @( 
     # This is a list of modules that need to be imported / installed
-    @{ Name = "Terminal-Icons"; ConfigKey = "Terminal-Icons_installed" },
     @{ Name = "Powershell-Yaml"; ConfigKey = "Powershell-Yaml_installed" },
+    @{ Name = "Terminal-Icons"; ConfigKey = "Terminal-Icons_installed" },
     @{ Name = "PoshFunctions"; ConfigKey = "PoshFunctions_installed" }
 )
 
