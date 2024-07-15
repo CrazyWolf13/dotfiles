@@ -5,8 +5,8 @@ if ($pingResult.StatusCode -eq 0) {$canConnectToGitHub = $true}
 else {$canConnectToGitHub = $false}
 
 # Define vars.
-$configPath = "$HOME\pwsh_custom_config.yml"
-$xConfigPath = "$HOME\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
+$configPath = "$HOME\unix-pwsh\pwsh_custom_config.yml"
+$xConfigPath = "$HOME\unix-pwsh\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
 $githubUser = "CrazyWolf13"
 $name= "Tobias"
 $promptColor = "DarkCyan" # Choose a color in which the hello text is colored; All Colors: Black, Blue, Cyan, DarkBlue, DarkCyan, DarkGray, DarkGreen, DarkMagenta, DarkRed, DarkYellow, Gray, Green, Magenta, Red, White, Yellow.
@@ -59,7 +59,6 @@ if (Test-Path -Path $xConfigPath) {
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
     Test-Pwsh 
     Test-CreateProfile
-    Initialize-DevEnv
     Install-Config
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
     $null = Show-MessageBox $infoMessage 'Important Notice' -Buttons OK -Icon Information
