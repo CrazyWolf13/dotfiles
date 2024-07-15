@@ -65,6 +65,26 @@ oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
 # Deferred loading
 # ----------------------------------------------------------
 
+# Check if psVersion is lower than 7.x, then load the functions without deferred loading
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    if ($global:canConnectToGitHub) {
+        #Load Custom Functions
+        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
+        #Load Functions
+        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
+        # Update PowerShell in the background
+        Start-Job -ScriptBlock {
+            Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
+            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+            Update-PowerShell 
+        } > $null 2>&1
+    } else {
+        Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
+        exit
+    }
+    exit
+}
+
 
 $Deferred = {
     if ($global:canConnectToGitHub) {
