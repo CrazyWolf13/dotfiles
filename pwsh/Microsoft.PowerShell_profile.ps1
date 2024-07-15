@@ -74,7 +74,6 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
         # Update PowerShell in the background
         Start-Job -ScriptBlock {
-            Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
             . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
             Update-PowerShell 
         } > $null 2>&1

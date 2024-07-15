@@ -43,6 +43,8 @@ function Initialize-DevEnv {
             Write-Host "Initializing $($module.Name) module..."
             Initialize-Module $module.Name
             if ($($module.Name) -eq "Powershell-Yaml") {
+                # Invoke the Helper Script to get Test-CommandExists function.
+                . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
                 # Check if we can already use ConvertTo-Yaml
                 if (-not (Test-CommandExists ConvertTo-Yaml)) {
                     Write-Host "Restarting installer to make Powershell-Yaml available." -ForegroundColor Yellow
@@ -60,18 +62,15 @@ function Initialize-DevEnv {
     }
     Write-Host "✅ Imported $importedModuleCount modules successfully." -ForegroundColor Green
     if ($ohmyposh_installed -ne "True") { 
-        Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         Test-ohmyposh 
         }
         $font_installed_var = "${font}_installed"
     if (((Get-Variable -Name $font_installed_var).Value) -ne "True") {
-        Write-Host "⚡ Invoking helper-script" -ForegroundColor Yellow
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         Test-$font
         }
     if ($vscode_installed -ne "True") { 
-        Write-Host "⚡ Invoking Custom_Functions-Script" -ForegroundColor Yellow
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
         Test-vscode 
