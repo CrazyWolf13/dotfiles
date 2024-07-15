@@ -15,7 +15,7 @@ function Test-Pwsh {
         Run-UpdatePowershell
         Start-Sleep -Seconds 8 # Wait for the update to finish
         Write-Host "Restarting the installation script with Powershell Core" -ForegroundColor Green
-        Start-Process pwsh -ArgumentList "-NoExit", "-Command Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1' -UseBasicParsing).Content"
+        Start-Process pwsh -ArgumentList "-NoExit", "-Command Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1'  ; Initialize-DevEnv ; Install-Config -UseBasicParsing).Content"
     }
 }
 
@@ -43,7 +43,7 @@ function Initialize-DevEnv {
                 # Check if we can already use ConvertTo-Yaml
                 if (-not (Test-CommandExists ConvertTo-Yaml)) {
                     Write-Host "Restarting installer to make Powershell-Yaml available." -ForegroundColor Yellow
-                    Start-Process pwsh -ArgumentList "-NoExit", "-Command Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1' -UseBasicParsing).Content"
+                    Start-Process pwsh -ArgumentList "-NoExit", "-Command Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1' ; Initialize-DevEnv ; Install-Config -UseBasicParsing).Content"
                     exit
                 }
             }
