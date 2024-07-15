@@ -98,11 +98,11 @@ function Update-PowerShell {
         if ($updateNeeded -and $isInstalled) {
             Write-Host "Updating PowerShell..." -ForegroundColor Yellow
             winget upgrade "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
-            Write-Host "PowerShell has been updated. Please restart your shell to reflect changes." -ForegroundColor Magenta
+            Write-Host "PowerShell has been updated." -ForegroundColor Magenta
         } elseif ($updateNeeded -and -not $isInstalled) {
             Write-Host "Installing PowerShell..." -ForegroundColor Yellow
             winget install "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
-            Write-Host "PowerShell has been installed. Please open a new shell to use PowerShell." -ForegroundColor Magenta
+            Write-Host "PowerShell has been installed." -ForegroundColor Magenta
         } else {
             Write-Host "✅ PowerShell is up to date." -ForegroundColor Green
         }
