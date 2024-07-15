@@ -78,26 +78,35 @@ function Test-$font {
 
 function Update-PowerShell {
     if (-not $global:canConnectToGitHub) {
-        Write-Host "❌ Skipping PowerShell update check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
+        Write-Host "❌ Skipping PowerShell update or installation check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
         return
     }
     try {
+        $isInstalled = $null -ne (Get-Command pwsh -ErrorAction SilentlyContinue)
         $updateNeeded = $false
-        $currentVersion = $PSVersionTable.PSVersion.ToString()
+        if ($isInstalled) {
+            $currentVersion = $PSVersionTable.PSVersion.ToString()
+        } else {
+            $currentVersion = "0.0"
+        }
         $gitHubApiUrl = "https://api.github.com/repos/PowerShell/PowerShell/releases/latest"
         $latestReleaseInfo = Invoke-RestMethod -Uri $gitHubApiUrl
         $latestVersion = $latestReleaseInfo.tag_name.Trim('v')
         if ($currentVersion -lt $latestVersion) {
             $updateNeeded = $true
         }
-        if ($updateNeeded) {
+        if ($updateNeeded -and $isInstalled) {
             Write-Host "Updating PowerShell..." -ForegroundColor Yellow
             winget upgrade "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
-            Write-Host "PowerShell has been updated. Please restart your shell to reflect changes" -ForegroundColor Magenta
+            Write-Host "PowerShell has been updated. Please restart your shell to reflect changes." -ForegroundColor Magenta
+        } elseif ($updateNeeded -and -not $isInstalled) {
+            Write-Host "Installing PowerShell..." -ForegroundColor Yellow
+            winget install "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
+            Write-Host "PowerShell has been installed. Please open a new shell to use PowerShell." -ForegroundColor Magenta
         } else {
             Write-Host "✅ PowerShell is up to date." -ForegroundColor Green
         }
     } catch {
-        Write-Error "❌ Failed to update PowerShell. Error: $_"
+        Write-Error "❌ Failed to update or install PowerShell. Error: $_"
     }
 }
