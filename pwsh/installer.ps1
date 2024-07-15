@@ -1,3 +1,14 @@
+function Test-ExecPolicy {
+    $execPolicy = Get-ExecutionPolicy
+    if ($execPolicy -ne "RemoteSigned") {
+        Write-Host "Execution Policy is not set to RemoteSigned. This can lead to errors, when trying to install this shell." -ForegroundColor Yellow
+        Read-Host "Would you like to set the Execution Policy to RemoteSigned? (Y/N)"
+        if ($? -eq 'Y') {
+            Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force
+        }
+    }
+}
+
 function Test-Pwsh {
     if (-not (Get-Command pwsh -ErrorAction SilentlyContinue)) {
         Write-Host "PowerShell Core (pwsh) is not installed. Starting the update..." -ForegroundColor Yellow
