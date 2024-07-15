@@ -158,3 +158,13 @@ $Wrapper = {
 }
 
 $null = $Powershell.AddScript($Wrapper.ToString()).BeginInvoke()
+
+
+
+
+# -----------------------------------------------------------------------------
+# TODO
+# Add notice at the end
+# Set the Font
+# Set pwsh as term
+# set WT as terminal
