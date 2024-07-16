@@ -34,14 +34,16 @@ If you have further questions, on how to set the above, don't hesitate to ask me
 
 # -----------------------------------------------------------------------------
 
-Write-Host ""
-Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
-Write-Host ""
-
 function Run-UpdatePowershell {
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
     Update-Powershell
 }
+
+# ----------------------------------------------------------------------------
+
+Write-Host ""
+Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
+Write-Host ""
 
 # Check for dependencies and if not chainload the installer.
 if (Test-Path -Path $xConfigPath) {
@@ -58,8 +60,7 @@ if (Test-Path -Path $xConfigPath) {
         exit
     }
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
-    # Trust the PSGallery repository for while installing this powershell profile.
-    Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
+    Install-NuGet
     Test-Pwsh 
     Test-CreateProfile
     Install-Config

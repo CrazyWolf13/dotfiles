@@ -9,6 +9,12 @@ function Test-ExecPolicy {
     }
 }
 
+function Install-NuGet {
+    # Install NuGet to ensure the other packages can be installed.
+    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+    # Trust the PSGallery repository for while installing this powershell profile.
+    Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
+}
 function Test-Pwsh {
     if (-not (Get-Command pwsh -ErrorAction SilentlyContinue)) {
         Write-Host "PowerShell Core (pwsh) is not installed. Starting the update..." -ForegroundColor Yellow
