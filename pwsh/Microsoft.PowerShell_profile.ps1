@@ -59,26 +59,14 @@ Write-Host ""
 . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
 
 
-# Function for checking and updating a file
-function CheckAndUpdateFile($filename) {
-    $localFileContent = Get-Content $filename
-    $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
-    $remoteFileContent = Invoke-WebRequest -Uri $url | Select-Object -ExpandProperty Content
 
-    if ($localFileContent -ne $remoteFileContent) {
-        Write-Host "Updating file: $filename"
-        DownloadFile "$filename"
-    } else {
-        Write-Host "File is up to date: $filename"
-    }
-}
 
 
 foreach ($file in $files) {
     if (Test-Path "$baseDir\$file") {
-        CheckAndUpdateFile "$baseDir\$file"
+        CheckAndUpdateFile $file
     } else {
-        DownloadFile "$baseDir\$file"
+        DownloadFile $file
     }
 }
 
