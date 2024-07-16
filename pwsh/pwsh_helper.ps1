@@ -34,7 +34,7 @@ function Install-NerdFont {
         Write-Host "Installing $font Nerd Font..." -ForegroundColor Green
         $fonts.CopyHere($fontFile.FullName, 0x10)
         Write-Host "$font Nerd Font installed successfully!" -ForegroundColor Green
-        Write-Host "📝 Make sure to set the font as default in your terminal settings." -ForegroundColor Red
+        Write-Host "📝 Make sure to set the font as default in your terminal settings." -ForegroundColor Blue
     } catch {
         Write-Host "❌ An error occurred: $_" -ForegroundColor Red
     } finally {

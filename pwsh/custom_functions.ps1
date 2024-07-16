@@ -1,8 +1,6 @@
 Set-Alias n notepad
 Set-Alias vs code
 
-$onedrive_Path = Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\OneDrive\Accounts\Business1" | Select-Object -ExpandProperty "UserFolder"
-
 function explrestart {taskkill /F /IM explorer.exe; Start-Process explorer.exe}
 function expl { explorer . }
 function Get-PubIP { (Invoke-WebRequest http://ifconfig.me/ip).Content }
@@ -10,9 +8,14 @@ function Get-PrivIP { (Get-NetIPAddress | Where-Object -Property AddressFamily -
 
 # Folder shortcuts
 function cdgit {Set-Location "G:\Informatik\Projekte"}
-function cdtbz {Set-Location "$onedrive_Path\Dokumente\Daten\TBZ"}
-function cdbmz {Set-Location "$onedrive_Path\Dokumente\Daten\BMZ"}
-function cdhalter {Set-Location "$onedrive_Path\Dokumente\Daten\Halter"}
+
+if (Test-Path "HKCU:\SOFTWARE\Microsoft\OneDrive\Accounts\Business1") {
+    $onedrive_Path = Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\OneDrive\Accounts\Business1" | Select-Object -ExpandProperty "UserFolder"
+    function cdtbz {Set-Location "$onedrive_Path\Dokumente\Daten\TBZ"}
+    function cdbmz {Set-Location "$onedrive_Path\Dokumente\Daten\BMZ"}
+    function cdhalter {Set-Location "$onedrive_Path\Dokumente\Daten\Halter"}
+}
+
 
 function gitpush {
     git pull
