@@ -65,6 +65,8 @@ function Initialize-DevEnv {
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         Test-ohmyposh 
     }
+    # Install NuGet to ensure the other packages can be installed.
+    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
     $font_installed_var = "${font}_installed"
     Write-Host "$font_installed, $font_installed_var, $font checking for the font_var"
     if (((Get-Variable -Name $font_installed_var).Value) -ne "True") {
