@@ -5,7 +5,7 @@ if ($pingResult.StatusCode -eq 0) {$canConnectToGitHub = $true}
 else {$canConnectToGitHub = $false}
 
 # Define vars.
-$baseDir = '$HOME\unix-pwsh'
+$baseDir = "$HOME\unix-pwsh"
 $configPath = "$baseDir\pwsh_custom_config.yml"
 $xConfigPath = "$baseDir\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
 $githubUser = "CrazyWolf13" # Change this here if you forked the repository.
@@ -24,7 +24,7 @@ $modules = @(
     @{ Name = "Terminal-Icons"; ConfigKey = "Terminal-Icons_installed" },
     @{ Name = "PoshFunctions"; ConfigKey = "PoshFunctions_installed" }
 )
-$files = @("Microsoft.PowerShell_Profile.ps1", "installer.ps1", "pwsh_helper.ps1", "custom_functions.ps1", "functions.ps1")
+$files = @("Microsoft.PowerShell_profile.ps1", "installer.ps1", "pwsh_helper.ps1", "custom_functions.ps1", "functions.ps1")
 
 # Message to tell the user what to do after installation
 $infoMessage = @"
@@ -57,9 +57,6 @@ Write-Host ""
 
 
 . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-
-
-
 
 
 foreach ($file in $files) {
