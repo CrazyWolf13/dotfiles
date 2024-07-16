@@ -11,7 +11,7 @@ function Test-ExecPolicy {
 
 function Install-NuGet {
     # Install NuGet to ensure the other packages can be installed.
-    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null
     # Trust the PSGallery repository for while installing this powershell profile.
     Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 }
@@ -42,8 +42,6 @@ function Test-CreateProfile {
 }
 
 function Initialize-DevEnv {
-    # Install NuGet to ensure the other packages can be installed.
-    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
     $importedModuleCount = 0
     foreach ($module in $modules) {
         $isInstalled = Get-ConfigValue -Key $module.ConfigKey
@@ -66,7 +64,7 @@ function Initialize-DevEnv {
         }
     }
     if ($importedModuleCount = @($modules).Count) {
-        New-Item -ItemType File -Path $xConfigPath
+        New-Item -ItemType File -Path $xConfigPath | Out-Null
     }
     Write-Host "✅ Imported $importedModuleCount modules successfully." -ForegroundColor Green
     if ($ohmyposh_installed -ne "True") { 
