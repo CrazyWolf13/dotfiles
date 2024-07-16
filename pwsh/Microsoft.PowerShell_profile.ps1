@@ -59,7 +59,6 @@ if (Test-Path -Path $xConfigPath) {
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
     Test-Pwsh 
     Test-CreateProfile
-    Initialize-DevEnv
     Install-Config
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
     $null = Show-MessageBox $infoMessage 'Important Notice' -Buttons OK -Icon Information
