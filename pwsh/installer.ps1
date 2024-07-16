@@ -64,18 +64,19 @@ function Initialize-DevEnv {
     if ($ohmyposh_installed -ne "True") { 
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         Test-ohmyposh 
-        }
-        $font_installed_var = "${font}_installed"
+    }
+    $font_installed_var = "${font}_installed"
+    Write-Host "$font_installed, $font_installed_var, $font checking for the font_var"
     if (((Get-Variable -Name $font_installed_var).Value) -ne "True") {
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+        Write-Host "Testing for the font now, as var said false."
         Test-$font
-        }
+    }
     if ($vscode_installed -ne "True") { 
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
         Test-vscode 
         }
-    
     Write-Host "✅ Successfully initialized Pwsh with all modules and applications`n" -ForegroundColor Green
 }
 
