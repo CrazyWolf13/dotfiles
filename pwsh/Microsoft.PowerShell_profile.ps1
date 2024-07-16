@@ -7,14 +7,14 @@ else {$canConnectToGitHub = $false}
 # Define vars.
 $configPath = "$HOME\unix-pwsh\pwsh_custom_config.yml"
 $xConfigPath = "$HOME\unix-pwsh\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
-$githubUser = "CrazyWolf13"
+$githubUser = "CrazyWolf13" # Change this here if you forked the repository.
 $name= "Tobias"
 $promptColor = "DarkCyan" # Choose a color in which the hello text is colored; All Colors: Black, Blue, Cyan, DarkBlue, DarkCyan, DarkGray, DarkGreen, DarkMagenta, DarkRed, DarkYellow, Gray, Green, Magenta, Red, White, Yellow.
 $OhMyPoshConfig = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/customisation/montys.omp.json"
 $font="FiraCode" # Font-Display and variable Name, name the same as font_folder
 $font_url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip" # Put here the URL of the font file that should be installed
 $fontFileName = "FiraCodeNerdFontMono-Regular.ttf" # Put here the font file that should be installed
-$font_folder = "FiraCode" # Put here the name of the zip folder, but without the .zip extension.
+$font_folder = "FiraCode" # Put here the name of the zip folder of the downloaded font, but without the .zip extension.
 $modules = @( 
     # This is a list of modules that need to be imported / installed
     @{ Name = "Powershell-Yaml"; ConfigKey = "Powershell-Yaml_installed" },
@@ -57,6 +57,7 @@ if (Test-Path -Path $xConfigPath) {
         exit
     }
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
+    Initialize-DevEnv
     Test-Pwsh 
     Test-CreateProfile
     Install-Config
