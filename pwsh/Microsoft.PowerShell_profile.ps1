@@ -21,6 +21,7 @@ $modules = @(
     @{ Name = "Terminal-Icons"; ConfigKey = "Terminal-Icons_installed" },
     @{ Name = "PoshFunctions"; ConfigKey = "PoshFunctions_installed" }
 )
+# Message to tell the user what to do after installation
 $infoMessage = @"
 To fully utilize the custom Unix-pwsh profile, please follow these steps:
 1. Set Windows Terminal as the default terminal.
@@ -57,6 +58,8 @@ if (Test-Path -Path $xConfigPath) {
         exit
     }
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
+    # Trust the PSGallery repository for while installing this powershell profile.
+    Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
     Test-Pwsh 
     Test-CreateProfile
     Install-Config

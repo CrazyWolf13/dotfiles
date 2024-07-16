@@ -81,6 +81,8 @@ function Initialize-DevEnv {
     wt.exe -p "PowerShell"
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
     $null = Show-MessageBox $infoMessage 'Important Notice' -Buttons OK -Icon Information
+    # Remove the trust from PSGallery Repository
+    Set-PSRepository -Name "PSGallery" -InstallationPolicy Untrusted
     exit
 }
 
