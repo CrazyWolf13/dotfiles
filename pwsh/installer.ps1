@@ -89,7 +89,7 @@ function Install-Config {
         }
         # Now create the actual config file
         New-Item -ItemType File -Path $configPath | Out-Null
-        Write-Host "Configuration file created at $configPath ❗" -ForegroundColor Yellow
+        Write-Host "Configuration file created at $configPath" -ForegroundColor Yellow
     } else {
         Write-Host "✅ Successfully loaded config file" -ForegroundColor Green
     }

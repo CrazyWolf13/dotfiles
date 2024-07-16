@@ -52,7 +52,9 @@ function Test-ohmyposh {
         $installOhMyPosh = Read-Host "Do you want to install Oh-My-Posh? (Y/N)"
         if ($installOhMyPosh -eq 'Y' -or $installOhMyPosh -eq 'y') {
             winget install JanDeDobbeleer.OhMyPosh --accept-package-agreements --accept-source-agreements
-            wt.exe
+            wt.exe -p "PowerShell"
+            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+            $null = Show-MessageBox $infoMessage 'Important Notice' -Buttons OK -Icon Information
             exit
         } else {
             Write-Host "❌ Oh-My-Posh installation skipped." -ForegroundColor Yellow
