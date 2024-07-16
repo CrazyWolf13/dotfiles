@@ -51,6 +51,28 @@ Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
 Write-Host ""
 
 
+# Check for dependencies and if not chainload the installer.
+if (Test-Path -Path $xConfigPath) {
+    # Check if the Master config file exists, if so skip every other check.
+    Write-Host "✅ Successfully initialized Pwsh with all modules and applications`n" -ForegroundColor Green
+    foreach ($module in $modules) {
+        # As the master config exists, we assume that all modules are installed.
+        Import-Module $module.Name
+    }
+} else {
+    # If there is no internet connection, we cannot install anything.
+    if (-not $global:canConnectToGitHub) {
+        Write-Host "❌ Skipping initialization due to GitHub not responding within 4 second." -ForegroundColor Red
+        exit
+    }
+    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
+    Install-NuGet
+    Test-Pwsh 
+    Test-CreateProfile
+    Install-Config
+}
+
+
 
 
 
@@ -75,26 +97,6 @@ foreach ($file in $files) {
 
 
 
-# Check for dependencies and if not chainload the installer.
-if (Test-Path -Path $xConfigPath) {
-    # Check if the Master config file exists, if so skip every other check.
-    Write-Host "✅ Successfully initialized Pwsh with all modules and applications`n" -ForegroundColor Green
-    foreach ($module in $modules) {
-        # As the master config exists, we assume that all modules are installed.
-        Import-Module $module.Name
-    }
-} else {
-    # If there is no internet connection, we cannot install anything.
-    if (-not $global:canConnectToGitHub) {
-        Write-Host "❌ Skipping initialization due to GitHub not responding within 4 second." -ForegroundColor Red
-        exit
-    }
-    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
-    Install-NuGet
-    Test-Pwsh 
-    Test-CreateProfile
-    Install-Config
-}
 
 # Try to import MS PowerToys WinGetCommandNotFound
 Import-Module -Name Microsoft.WinGet.CommandNotFound > $null 2>&1
