@@ -40,13 +40,13 @@ iex (iwr "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/pwsh/Micro
 - **Oh My Posh**: Customizable prompt themes.
 
 ## Configuration 📁
-- Configuration file at: `~/pwsh_custom_config.yml` for centralized options and faster loading.
+- Configuration file at: `~/unix-pwsh/pwsh_custom_config.yml` for faster loading.
 
 ## Usage 🚀
 1. Paste: `iex (iwr "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1").Content`.
 2. Profile is automatically created and injected.
-3. Edit profile with `notepad $PROFILE`.
-4. Use `pwsh` instead of `powershell` in Windows Terminal.
+3. Edit profile-file with `notepad $PROFILE`.
+4. Use `pwsh(Powershell Core) (Powershell 7.x +)` instead of `powershell` in Windows Terminal.
 5. Enjoy!
 
 ## Supported Linux Commands 🐧

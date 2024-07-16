@@ -82,11 +82,11 @@ function Initialize-DevEnv {
 # Function to create config file
 function Install-Config {
     if (-not (Test-Path -Path $configPath)) {
-        # First we need to make sure the folder for the config file exists.
-        $configDirectory = Split-Path -Path $configPath
-        if (-not (Test-Path -Path $configDirectory)) {
-        New-Item -ItemType Directory -Path $configDirectory -Force | Out-Null
-        }
+        # # First we need to make sure the folder for the config file exists.
+        # $configDirectory = Split-Path -Path $configPath
+        # if (-not (Test-Path -Path $configDirectory)) {
+        # New-Item -ItemType Directory -Path $configDirectory -Force | Out-Null
+        # }
         # Now create the actual config file
         New-Item -ItemType File -Path $configPath | Out-Null
         Write-Host "Configuration file created at $configPath ❗" -ForegroundColor Yellow
