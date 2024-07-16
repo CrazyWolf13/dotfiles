@@ -1,4 +1,3 @@
-
 # Functions to mimic some of the functionality of the Unix shell
 # Does the the rough equivalent of dir /s /b. For example, dirs *.png is dir /s /b *.png
 function dirs {

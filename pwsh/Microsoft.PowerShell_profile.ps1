@@ -5,22 +5,27 @@ if ($pingResult.StatusCode -eq 0) {$canConnectToGitHub = $true}
 else {$canConnectToGitHub = $false}
 
 # Define vars.
-$configPath = "$HOME\unix-pwsh\pwsh_custom_config.yml"
-$xConfigPath = "$HOME\unix-pwsh\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
+$baseDir = '$HOME\unix-pwsh'
+$configPath = "$baseDir\pwsh_custom_config.yml"
+$xConfigPath = "$baseDir\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
 $githubUser = "CrazyWolf13" # Change this here if you forked the repository.
 $name= "Tobias"
 $promptColor = "DarkCyan" # Choose a color in which the hello text is colored; All Colors: Black, Blue, Cyan, DarkBlue, DarkCyan, DarkGray, DarkGreen, DarkMagenta, DarkRed, DarkYellow, Gray, Green, Magenta, Red, White, Yellow.
 $OhMyPoshConfig = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/customisation/montys.omp.json"
+
 $font="FiraCode" # Font-Display and variable Name, name the same as font_folder
 $font_url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip" # Put here the URL of the font file that should be installed
 $fontFileName = "FiraCodeNerdFontMono-Regular.ttf" # Put here the font file that should be installed
 $font_folder = "FiraCode" # Put here the name of the zip folder of the downloaded font, but without the .zip extension.
+
 $modules = @( 
     # This is a list of modules that need to be imported / installed
     @{ Name = "Powershell-Yaml"; ConfigKey = "Powershell-Yaml_installed" },
     @{ Name = "Terminal-Icons"; ConfigKey = "Terminal-Icons_installed" },
     @{ Name = "PoshFunctions"; ConfigKey = "PoshFunctions_installed" }
 )
+$files = @("Microsoft.PowerShell_Profile.ps1", "installer.ps1", "pwsh_helper.ps1", "custom_functions.ps1", "functions.ps1")
+
 # Message to tell the user what to do after installation
 $infoMessage = @"
 To fully utilize the custom Unix-pwsh profile, please follow these steps:
@@ -44,6 +49,20 @@ function Run-UpdatePowershell {
 Write-Host ""
 Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
 Write-Host ""
+
+
+
+
+foreach ($file in $files) {
+    if (Test-Path "$baseDir\$file") {
+        CheckAndUpdateFile "$baseDir\$file"
+    } else {
+        DownloadFile "$baseDir\$file"
+    }
+}
+
+
+
 
 # Check for dependencies and if not chainload the installer.
 if (Test-Path -Path $xConfigPath) {

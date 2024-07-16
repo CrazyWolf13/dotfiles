@@ -1,5 +1,26 @@
 Write-Host "✅ Helper script invoked successfully" -ForegroundColor Green
 
+# Function for downloading a file
+function DownloadFile($filename) {
+    $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
+    Invoke-WebRequest -Uri $url -OutFile $filename
+    Write-Host "file downloaded: $filename"
+}
+
+# Function for checking and updating a file
+function CheckAndUpdateFile($filename) {
+    $localFileContent = Get-Content $filename
+    $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
+    $remoteFileContent = Invoke-WebRequest -Uri $url | Select-Object -ExpandProperty Content
+
+    if ($localFileContent -ne $remoteFileContent) {
+        Write-Host "Updated file: $filename"
+        Invoke-WebRequest -Uri $url -OutFile $filename
+    } else {
+        Write-Host "File is up to date: $filename"
+    }
+}
+
 Function Test-CommandExists {
     Param ($command)
     $oldPreference = $ErrorActionPreference
