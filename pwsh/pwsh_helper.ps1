@@ -132,8 +132,8 @@ function Show-MessageBox {
     $buttonMap = @{ 
         'OK'               = @{ buttonList = 'OK'; defaultButtonIndex = 0 }
         'OKCancel'         = @{ buttonList = 'OK', 'Cancel'; defaultButtonIndex = 0; cancelButtonIndex = 1 }
-        'AbortRetryIgnore' = @{ buttonList = 'Abort', 'Retry', 'Ignore'; defaultButtonIndex = 2; ; cancelButtonIndex = 0 }; 
-        'YesNoCancel'      = @{ buttonList = 'Yes', 'No', 'Cancel'; defaultButtonIndex = 2; cancelButtonIndex = 2 };
+        'AbortRetryIgnore' = @{ buttonList = 'Abort', 'Retry', 'Ignore'; defaultButtonIndex = 2; cancelButtonIndex = 0 }
+        'YesNoCancel'      = @{ buttonList = 'Yes', 'No', 'Cancel'; defaultButtonIndex = 2; cancelButtonIndex = 2 }
         'YesNo'            = @{ buttonList = 'Yes', 'No'; defaultButtonIndex = 0; cancelButtonIndex = 1 }
         'RetryCancel'      = @{ buttonList = 'Retry', 'Cancel'; defaultButtonIndex = 0; cancelButtonIndex = 1 }
     }
@@ -141,9 +141,23 @@ function Show-MessageBox {
     $numButtons = $buttonMap[$Buttons].buttonList.Count
     $defaultIndex = [math]::Min($numButtons - 1, ($buttonMap[$Buttons].defaultButtonIndex, $DefaultButtonIndex)[$PSBoundParameters.ContainsKey('DefaultButtonIndex')])
     $cancelIndex = $buttonMap[$Buttons].cancelButtonIndex
-    Add-Type -Assembly System.Windows.Forms        
-    # Show the dialog.
-    # Output the chosen button as a stringified [System.Windows.Forms.DialogResult] enum value,
-    # for consistency with the macOS behavior.
-    [System.Windows.Forms.MessageBox]::Show($Message, $Title, $Buttons, $Icon, $defaultIndex * 256).ToString()
+    Add-Type -AssemblyName System.Windows.Forms
+
+    # Create a hidden form and set it as TopMost
+    $form = New-Object System.Windows.Forms.Form
+    $form.TopMost = $true
+    $form.ShowInTaskbar = $false
+    $form.WindowState = 'Minimized'
+    $form.Show()
+    $form.Hide()
+
+    # Show the message box with the hidden form as the owner
+    $result = [System.Windows.Forms.MessageBox]::Show($form, $Message, $Title, $Buttons, $Icon, $defaultIndex * 256).ToString()
+
+    # Close the hidden form
+    $form.Close()
+    $form.Dispose()
+
+    # Output the result
+    return $result
 }
