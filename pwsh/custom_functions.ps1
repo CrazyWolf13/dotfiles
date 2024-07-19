@@ -12,10 +12,7 @@ function cdgit {Set-Location "G:\Informatik\Projekte"}
 if (Test-Path "HKCU:\SOFTWARE\Microsoft\OneDrive\Accounts\Business1") {
     $onedriveProperty = Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\OneDrive\Accounts\Business1"
     if ($onedriveProperty -and $onedriveProperty.UserFolder) {
-        $onedrive_Path = $onedriveProperty.UserFolder
-    } else {
-        Write-Host "OneDrive path does not exist."
-    }
+        $onedrive_Path = $onedriveProperty.UserFolder }
     function cdtbz {Set-Location "$onedrive_Path\Dokumente\Daten\TBZ"}
     function cdbmz {Set-Location "$onedrive_Path\Dokumente\Daten\BMZ"}
     function cdhalter {Set-Location "$onedrive_Path\Dokumente\Daten\Halter"}
