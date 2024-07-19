@@ -48,16 +48,6 @@ function Initialize-DevEnv {
         if ($isInstalled -ne "True") {
             Write-Host "Initializing $($module.Name) module..."
             Initialize-Module $module.Name
-            if ($($module.Name) -eq "Powershell-Yaml") {
-                # Invoke the Helper Script to get Test-CommandExists function.
-                . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-                # Check if we can already use ConvertTo-Yaml
-                if (-not (Test-CommandExists ConvertTo-Yaml)) {
-                    Write-Host "Restarting installer to make Powershell-Yaml available." -ForegroundColor Yellow
-                    Start-Process pwsh -ArgumentList "-NoExit", "-Command Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1'-UseBasicParsing).Content ; Install-Config"
-                    exit
-                }
-            }
         } else {
             Import-Module $module.Name
             $importedModuleCount++
