@@ -50,7 +50,6 @@ function Run-UpdatePowershell {
 function DownloadFile($filename) {
     $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
     Invoke-WebRequest -Uri $url -OutFile "$baseDir\$filename"
-    Write-Host "File downloaded: $baseDir\$filename" -ForegroundColor Cyan
 }
 
 # Function for checking and updating files
@@ -60,7 +59,7 @@ function CheckAndUpdateFile($filename) {
     $remoteFileContent = Invoke-WebRequest -Uri $url | Select-Object -ExpandProperty Content
 
     if ($localFileContent -ne $remoteFileContent) {
-        Write-Host "Updating file: $filename" -ForegroundColor DarkCyan
+        Write-Host "Updating file: $filename" -ForegroundColor Cyan
         DownloadFile "$filename"
         $global:updatedFilesCount += 1
     }
