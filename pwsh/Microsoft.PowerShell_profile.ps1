@@ -62,7 +62,7 @@ function CheckAndUpdateFile($filename) {
         Write-Host "Updating file: $filename" -ForegroundColor Cyan
         DownloadFile "$filename"
         $global:updatedFilesCount += 1
-    }
+        Write-Host "$global:updatedFilesCount is the counter"    }
 }
 
 function CheckScriptFilesForUpdates {
