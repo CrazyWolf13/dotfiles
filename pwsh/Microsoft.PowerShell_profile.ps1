@@ -52,7 +52,7 @@ function DownloadFile($filename) {
     Invoke-WebRequest -Uri $url -OutFile "$baseDir\$filename"
 }
 
-# Function for checking and updating files
+# Function for checking and updating script files
 function CheckAndUpdateFile($filename) {
     $localFileContent = Get-Content "$baseDir\$filename" -Raw
     $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"

@@ -11,7 +11,15 @@ function Test-ExecPolicy {
 
 function Install-NuGet {
     # Install NuGet to ensure the other packages can be installed.
-    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force | Out-Null
+    $nugetProvider = Get-PackageProvider -Name NuGet -ErrorAction SilentlyContinue
+    if (-not $nugetProvider) {
+        Write-Host "NuGet provider not found. Installing..."
+        Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
+        Import-PackageProvider -Name NuGet -Force
+        Write-Host "NuGet provider installed."
+    } else {
+        Write-Host "NuGet provider is already installed."
+    }
     # Trust the PSGallery repository for while installing this powershell profile.
     Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 }
