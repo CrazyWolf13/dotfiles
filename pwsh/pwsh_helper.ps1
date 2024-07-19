@@ -9,7 +9,7 @@ function DownloadFile($filename) {
 
 # Function for checking and updating a file
 function CheckAndUpdateFile($filename) {
-    $localFileContent = Get-Content "$baseDir\$filename"
+    $localFileContent = Get-Content "$baseDir\$filename" -Raw
     Write-Host "$localFileContent is the local file content"
     $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
     $remoteFileContent = Invoke-WebRequest -Uri $url | Select-Object -ExpandProperty Content
