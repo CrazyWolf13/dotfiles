@@ -38,11 +38,53 @@ If you have further questions, on how to set the above, don't hesitate to ask me
 "@
 
 # -----------------------------------------------------------------------------
-
+# Functions
+# -----------------------------------------------------------------------------
+# Function for calling the update Powershell Script
 function Run-UpdatePowershell {
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
     Update-Powershell
 }
+
+# Function for downloading a file
+function DownloadFile($filename) {
+    $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
+    Invoke-WebRequest -Uri $url -OutFile "$baseDir\$filename"
+    Write-Host "File downloaded: $baseDir\$filename"
+}
+
+# Function for checking and updating files
+function CheckAndUpdateFile($filename) {
+    $localFileContent = Get-Content "$baseDir\$filename" -Raw
+    $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
+    $remoteFileContent = Invoke-WebRequest -Uri $url | Select-Object -ExpandProperty Content
+
+    if ($localFileContent -ne $remoteFileContent) {
+        Write-Host "Updating file: $filename"
+        DownloadFile "$filename"
+        $global:updatedFilesCount += 1
+    }
+}
+
+function CheckScriptFilesForUpdates {
+    foreach ($file in $files) {
+        if (Test-Path "$baseDir\$file") {
+            CheckAndUpdateFile $file
+        } else {
+            DownloadFile $file
+        }
+    }
+
+    # Initialises the count variable
+    $global:updatedFilesCount = 0
+
+    if ($global:updatedFilesCount -eq 0) {
+        Write-Host "✅ Everything is up to date." -ForegroundColor Green
+    } else {
+        Write-Host "✅ Updated $global:updatedFilesCount Files." -ForegroundColor Green
+    }
+}
+
 
 # ----------------------------------------------------------------------------
 
@@ -72,31 +114,8 @@ if (Test-Path -Path $xConfigPath) {
     Install-Config
 }
 
-
-
-
-
-
-
-. Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-
-
-foreach ($file in $files) {
-    if (Test-Path "$baseDir\$file") {
-        CheckAndUpdateFile $file
-    } else {
-        DownloadFile $file
-    }
-}
-
-
-
-
-
-
-
-
-
+# Update the local cache of files
+CheckScriptFilesForUpdates
 
 # Try to import MS PowerToys WinGetCommandNotFound
 Import-Module -Name Microsoft.WinGet.CommandNotFound > $null 2>&1
