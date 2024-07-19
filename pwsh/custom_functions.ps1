@@ -10,7 +10,12 @@ function Get-PrivIP { (Get-NetIPAddress | Where-Object -Property AddressFamily -
 function cdgit {Set-Location "G:\Informatik\Projekte"}
 
 if (Test-Path "HKCU:\SOFTWARE\Microsoft\OneDrive\Accounts\Business1") {
-    $onedrive_Path = Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\OneDrive\Accounts\Business1" | Select-Object -ExpandProperty "UserFolder"
+    $onedriveProperty = Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\OneDrive\Accounts\Business1"
+    if ($onedriveProperty -and $onedriveProperty.UserFolder) {
+        $onedrive_Path = $onedriveProperty.UserFolder
+    } else {
+        Write-Host "OneDrive path does not exist."
+    }
     function cdtbz {Set-Location "$onedrive_Path\Dokumente\Daten\TBZ"}
     function cdbmz {Set-Location "$onedrive_Path\Dokumente\Daten\BMZ"}
     function cdhalter {Set-Location "$onedrive_Path\Dokumente\Daten\Halter"}
