@@ -74,10 +74,6 @@ function CheckScriptFilesForUpdates {
             DownloadFile $file
         }
     }
-
-    # Initialises the count variable
-    $global:updatedFilesCount = 0
-
     if ($global:updatedFilesCount -eq 0) {
         Write-Host "✅ Everything is up to date." -ForegroundColor Green
     } else {
@@ -115,6 +111,7 @@ if (Test-Path -Path $xConfigPath) {
 }
 
 # Update the local cache of files
+$global:updatedFilesCount = 0
 CheckScriptFilesForUpdates
 
 # Try to import MS PowerToys WinGetCommandNotFound
