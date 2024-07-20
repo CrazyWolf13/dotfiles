@@ -57,47 +57,13 @@ function Run-UpdatePowershell {
     Update-Powershell
 }
 
-# Function for downloading a file
-function DownloadFile($filename) {
-    $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
-    Invoke-WebRequest -Uri $url -OutFile "$baseDir\$filename"
-}
-
-# Function for checking and updating script files
-function CheckAndUpdateFile($filename) {
-    $localFileContent = Get-Content "$baseDir\$filename" -Raw
-    $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
-    $remoteFileContent = Invoke-WebRequest -Uri $url | Select-Object -ExpandProperty Content
-
-    if ($localFileContent -ne $remoteFileContent) {
-        Write-Host "Updating file: $filename" -ForegroundColor Cyan
-        DownloadFile "$filename"
-        $updatedFilesCount += 1
-    }
-}
-
-function CheckScriptFilesForUpdates {
-    foreach ($file in $files) {
-        if (Test-Path "$baseDir\$file") {
-            CheckAndUpdateFile $file
-        } else {
-            DownloadFile $file
-        }
-    }
-    if ($updatedFilesCount -eq 0) {
-        Write-Host "✅ Everything is up to date." -ForegroundColor Green
-    } else {
-        Write-Host "✅ Updated $updatedFilesCount Files." -ForegroundColor Green
-    }
-}
-
 function BackgroundTasks {
     Start-Job -ScriptBlock {
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         Update-PowerShell
         # Update the local cache of files
-        $updatedFilesCount = 0
         CheckScriptFilesForUpdates
+        Write-Host "🔄 Updated the local cache of files." -ForegroundColor Green
     } 
     # > $null 2>&1
 }
@@ -107,7 +73,6 @@ function BackgroundTasks {
 Write-Host ""
 Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
 Write-Host ""
-
 
 # Check for dependencies and if not chainload the installer.
 if (Test-Path -Path $xConfigPath) {
@@ -163,7 +128,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     }
 }
 
-# --------
+# ---------------------------------------------------------
 
 $Deferred = {
     if ($injectionMethod -eq "local") {
