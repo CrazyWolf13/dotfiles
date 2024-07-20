@@ -77,11 +77,11 @@ Write-Host ""
 # Check for dependencies and if not chainload the installer.
 if (Test-Path -Path $xConfigPath) {
     # Check if the Master config file exists, if so skip every other check.
-    Write-Host "✅ Successfully initialized Pwsh with all modules and applications`n" -ForegroundColor Green
-    foreach ($module in $modules) {
-        # As the master config exists, we assume that all modules are installed.
-        Import-Module $module.Name
-    }
+    Write-Host "✅ Successfully initialized Pwsh`n" -ForegroundColor Green
+    # foreach ($module in $modules) {
+    #     # As the master config exists, we assume that all modules are installed.
+    #     Import-Module $module.Name
+    # }
 } else {
     # If there is no internet connection, we cannot install anything.
     if (-not $global:canConnectToGitHub) {
