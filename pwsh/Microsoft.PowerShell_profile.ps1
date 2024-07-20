@@ -1,4 +1,5 @@
 # Check internet access
+# Use wmi as there is no timeout in pwsh  5.0 and generally slow.
 $timeout = 1000 
 $pingResult = Get-WmiObject -Query "Select * from Win32_PingStatus where Address='github.com' and Timeout=$timeout"
 if ($pingResult.StatusCode -eq 0) {$canConnectToGitHub = $true} 
@@ -41,19 +42,14 @@ If you have further questions, on how to set the above, don't hesitate to ask me
 # Functions
 # -----------------------------------------------------------------------------
 
-# Function to check if $files exist or not.
-foreach ($file in $files) {
-    $fullPath = Join-Path -Path $baseDir -ChildPath $file
-    if (Test-Path $fullPath) {
-        $injectionMethod="local"
-        $OhMyPoshConfig="$baseDir\montys.omp.json"
-        Write-Host "Using local injection."
-    } else {
-        $injectionMethod="remote"
-        Write-Host "Using remote injection."
-    }
+# Function to check if all the $files exist or not.
+$allFilesExist = $files | ForEach-Object { Join-Path -Path $baseDir -ChildPath $_ } | Test-Path -PathType Leaf -ErrorAction SilentlyContinue | ForEach-Object { $_ -eq $true }
+if ($allFilesExist -contains $false) {
+    $injectionMethod = "remote"
+} else {
+    $injectionMethod = "local"
+    $OhMyPoshConfig = Join-Path -Path $baseDir -ChildPath "montys.omp.json"
 }
-
 
 # Function for calling the update Powershell Script
 function Run-UpdatePowershell {
