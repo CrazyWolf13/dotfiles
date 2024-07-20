@@ -23,7 +23,6 @@ function Install-NerdFont {
             New-Item -ItemType Directory -Path $extractPath | Out-Null
         }
         # Extract the zip file
-        Write-Host "Extracting $font Nerd Font..." -ForegroundColor Green
         Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
         # Find the specific font file
         $fontFile = Get-ChildItem -Path $extractPath -Filter $fontFileName | Select-Object -First 1

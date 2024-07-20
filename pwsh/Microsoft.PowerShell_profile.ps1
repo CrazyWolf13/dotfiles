@@ -11,7 +11,7 @@ $xConfigPath = "$baseDir\pwsh_full_custom_config.yml" # This file exists if the 
 $githubUser = "CrazyWolf13" # Change this here if you forked the repository.
 $name= "Tobias"
 $promptColor = "DarkCyan" # Choose a color in which the hello text is colored; All Colors: Black, Blue, Cyan, DarkBlue, DarkCyan, DarkGray, DarkGreen, DarkMagenta, DarkRed, DarkYellow, Gray, Green, Magenta, Red, White, Yellow.
-$OhMyPoshConfig = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/customisation/montys.omp.json"
+$OhMyPoshConfig = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/montys.omp.json"
 
 $font="FiraCode" # Font-Display and variable Name, name the same as font_folder
 $font_url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip" # Put here the URL of the font file that should be installed
@@ -24,7 +24,7 @@ $modules = @(
     @{ Name = "Terminal-Icons"; ConfigKey = "Terminal-Icons_installed" },
     @{ Name = "PoshFunctions"; ConfigKey = "PoshFunctions_installed" }
 )
-$files = @("Microsoft.PowerShell_profile.ps1", "installer.ps1", "pwsh_helper.ps1", "custom_functions.ps1", "functions.ps1")
+$files = @("Microsoft.PowerShell_profile.ps1", "installer.ps1", "pwsh_helper.ps1", "custom_functions.ps1", "functions.ps1", "montys.omp.json")
 
 # Message to tell the user what to do after installation
 $infoMessage = @"
@@ -40,6 +40,20 @@ If you have further questions, on how to set the above, don't hesitate to ask me
 # -----------------------------------------------------------------------------
 # Functions
 # -----------------------------------------------------------------------------
+
+# Function to check if $files exist or not.
+# Funktion zum Überprüfen, ob Dateien im $baseDir existieren oder nicht.
+foreach ($file in $files) {
+    $fullPath = Join-Path -Path $baseDir -ChildPath $file
+    if (Test-Path $fullPath) {
+        $injectionMethod="local"
+        $OhMyPoshConfig="$baseDir\montys.omp.json"
+    } else {
+        $injectionMethod="remote"
+    }
+}
+
+
 # Function for calling the update Powershell Script
 function Run-UpdatePowershell {
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
@@ -61,7 +75,7 @@ function CheckAndUpdateFile($filename) {
     if ($localFileContent -ne $remoteFileContent) {
         Write-Host "Updating file: $filename" -ForegroundColor Cyan
         DownloadFile "$filename"
-        $global:updatedFilesCount += 1
+        $updatedFilesCount += 1
     }
 }
 
@@ -73,10 +87,10 @@ function CheckScriptFilesForUpdates {
             DownloadFile $file
         }
     }
-    if ($global:updatedFilesCount -eq 0) {
+    if ($updatedFilesCount -eq 0) {
         Write-Host "✅ Everything is up to date." -ForegroundColor Green
     } else {
-        Write-Host "✅ Updated $global:updatedFilesCount Files." -ForegroundColor Green
+        Write-Host "✅ Updated $updatedFilesCount Files." -ForegroundColor Green
     }
 }
 
@@ -110,7 +124,7 @@ if (Test-Path -Path $xConfigPath) {
 }
 
 # Update the local cache of files
-$global:updatedFilesCount = 0
+$updatedFilesCount = 0
 CheckScriptFilesForUpdates
 
 # Try to import MS PowerToys WinGetCommandNotFound
