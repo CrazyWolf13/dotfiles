@@ -95,6 +95,8 @@ function BackgroundTasks {
     Start-Job -ScriptBlock {
         . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
         Update-PowerShell
+        # Update the local cache of files
+        $updatedFilesCount = 0
         CheckScriptFilesForUpdates
     } > $null 2>&1
 }
@@ -126,10 +128,6 @@ if (Test-Path -Path $xConfigPath) {
     Test-CreateProfile
     Install-Config
 }
-
-# Update the local cache of files
-$updatedFilesCount = 0
-CheckScriptFilesForUpdates
 
 # Try to import MS PowerToys WinGetCommandNotFound
 Import-Module -Name Microsoft.WinGet.CommandNotFound > $null 2>&1
