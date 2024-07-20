@@ -98,7 +98,8 @@ function BackgroundTasks {
         # Update the local cache of files
         $updatedFilesCount = 0
         CheckScriptFilesForUpdates
-    } > $null 2>&1
+    } 
+    # > $null 2>&1
 }
 
 # ----------------------------------------------------------------------------
@@ -138,9 +139,10 @@ oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
 
 # ----------------------------------------------------------
 # Deferred loading
+# Source: https://fsackur.github.io/2023/11/20/Deferred-profile-loading-for-better-performance/
 # ----------------------------------------------------------
 
-# Check if psVersion is lower than 7.x, then load the functions without deferred loading
+# Check if psVersion is lower than 7.x, then load the functions **without** deferred loading
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     if ($injectionMethod -eq "local") {
         . "$baseDir\custom_functions.ps1"
@@ -160,6 +162,8 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         }
     }
 }
+
+# --------
 
 $Deferred = {
     if ($injectionMethod -eq "local") {
@@ -184,19 +188,16 @@ $Deferred = {
 
 $GlobalState = [psmoduleinfo]::new($false)
 $GlobalState.SessionState = $ExecutionContext.SessionState
-
 # to run our code asynchronously
 $Runspace = [runspacefactory]::CreateRunspace($Host)
 $Powershell = [powershell]::Create($Runspace)
 $Runspace.Open()
 $Runspace.SessionStateProxy.PSVariable.Set('GlobalState', $GlobalState)
-
 # ArgumentCompleters are set on the ExecutionContext, not the SessionState
 # Note that $ExecutionContext is not an ExecutionContext, it's an EngineIntrinsics 😡
 $Private = [Reflection.BindingFlags]'Instance, NonPublic'
 $ContextField = [Management.Automation.EngineIntrinsics].GetField('_context', $Private)
 $Context = $ContextField.GetValue($ExecutionContext)
-
 # Get the ArgumentCompleters. If null, initialise them.
 $ContextCACProperty = $Context.GetType().GetProperty('CustomArgumentCompleters', $Private)
 $ContextNACProperty = $Context.GetType().GetProperty('NativeArgumentCompleters', $Private)
@@ -212,17 +213,14 @@ if ($null -eq $NAC)
     $NAC = [Collections.Generic.Dictionary[string, scriptblock]]::new()
     $ContextNACProperty.SetValue($Context, $NAC)
 }
-
 # Get the AutomationEngine and ExecutionContext of the runspace
 $RSEngineField = $Runspace.GetType().GetField('_engine', $Private)
 $RSEngine = $RSEngineField.GetValue($Runspace)
 $EngineContextField = $RSEngine.GetType().GetFields($Private) | Where-Object {$_.FieldType.Name -eq 'ExecutionContext'}
 $RSContext = $EngineContextField.GetValue($RSEngine)
-
 # Set the runspace to use the global ArgumentCompleters
 $ContextCACProperty.SetValue($RSContext, $CAC)
 $ContextNACProperty.SetValue($RSContext, $NAC)
-
 $Wrapper = {
     # Without a sleep, you get issues:
     #   - occasional crashes
@@ -231,8 +229,6 @@ $Wrapper = {
     # Assumption: this is related to PSReadLine.
     # 20ms seems to be enough on my machine, but let's be generous - this is non-blocking
     Start-Sleep -Milliseconds 100
-
     . $GlobalState {. $Deferred; Remove-Variable Deferred}
 }
-
 $null = $Powershell.AddScript($Wrapper.ToString()).BeginInvoke()
