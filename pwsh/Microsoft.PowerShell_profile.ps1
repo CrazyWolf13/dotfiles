@@ -42,14 +42,15 @@ If you have further questions, on how to set the above, don't hesitate to ask me
 # -----------------------------------------------------------------------------
 
 # Function to check if $files exist or not.
-# Funktion zum Überprüfen, ob Dateien im $baseDir existieren oder nicht.
 foreach ($file in $files) {
     $fullPath = Join-Path -Path $baseDir -ChildPath $file
     if (Test-Path $fullPath) {
         $injectionMethod="local"
         $OhMyPoshConfig="$baseDir\montys.omp.json"
+        Write-Host "Using local injection."
     } else {
         $injectionMethod="remote"
+        Write-Host "Using remote injection."
     }
 }
 
