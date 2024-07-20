@@ -94,6 +94,13 @@ function CheckScriptFilesForUpdates {
     }
 }
 
+function BackgroundTasks {
+    Start-Job -ScriptBlock {
+        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+        Update-PowerShell
+        CheckScriptFilesForUpdates
+    } > $null 2>&1
+}
 
 # ----------------------------------------------------------------------------
 
@@ -140,39 +147,42 @@ oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
 
 # Check if psVersion is lower than 7.x, then load the functions without deferred loading
 if ($PSVersionTable.PSVersion.Major -lt 7) {
-    if ($global:canConnectToGitHub) {
-        #Load Custom Functions
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
-        #Load Functions
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
-        # Update PowerShell in the background
-        Start-Job -ScriptBlock {
-            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-            Update-PowerShell 
-        } > $null 2>&1
+    if ($injectionMethod -eq "local") {
+        . "$baseDir\custom_functions.ps1"
+        . "$baseDir\functions.ps1"
+        # Execute the background tasks
+        BackgroundTasks
     } else {
-        Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
-        exit
+        if ($global:canConnectToGitHub) {
+            #Load Custom Functions
+            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
+            #Load Functions
+            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
+            # Update PowerShell in the background
+            BackgroundTasks
+        } else {
+            Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
+        }
     }
-    exit
 }
 
-
 $Deferred = {
-    if ($global:canConnectToGitHub) {
-        #Load Custom Functions
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
-        #Load Functions
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
-        # Update PowerShell in the background
-        Start-Job -ScriptBlock {
-            Write-Host "⚡ Invoking Helper-Script" -ForegroundColor Yellow
-            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-            Update-PowerShell 
-        } > $null 2>&1
+    if ($injectionMethod -eq "local") {
+        . "$baseDir\custom_functions.ps1"
+        . "$baseDir\functions.ps1"
+        # Execute the background tasks
+        BackgroundTasks
     } else {
-        Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
-        exit
+        if ($global:canConnectToGitHub) {
+            #Load Custom Functions
+            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
+            #Load Functions
+            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
+            # Update PowerShell in the background
+            BackgroundTasks
+        } else {
+            Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
+        }
     }
 }
 
