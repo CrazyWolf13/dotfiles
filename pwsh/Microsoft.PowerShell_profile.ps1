@@ -78,6 +78,7 @@ Write-Host ""
 if (Test-Path -Path $xConfigPath) {
     # Check if the Master config file exists, if so skip every other check.
     Write-Host "✅ Successfully initialized Pwsh`n" -ForegroundColor Green
+    Import-Module Terminal-Icons
     # foreach ($module in $modules) {
     #     # As the master config exists, we assume that all modules are installed.
     #     Import-Module $module.Name
