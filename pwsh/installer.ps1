@@ -44,7 +44,7 @@ function Test-CreateProfile {
     # Create profile if not exists
     if (-not (Test-Path -Path $PROFILE)) {
         New-Item -ItemType File -Path $PROFILE | Out-Null
-        Add-Content -Path $PROFILE -Value "iex (iwr `https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1`).Content"
+        Add-Content -Path $PROFILE -Value ". "${home}\unix-pwsh\Microsoft.PowerShell_profile.ps1" 2>$null || iex (iwr "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1").Content"
         Write-Host "PowerShell profile created at $PROFILE." -ForegroundColor Yellow
     }
 }
@@ -82,6 +82,7 @@ function Initialize-DevEnv {
     Write-Host "✅ Successfully initialized Pwsh with all modules and applications`n" -ForegroundColor Green
     wt.exe -p "PowerShell"
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+    $null = Show-MessageBox $infoMessage 'Important Notice' -Buttons OK -Icon Information
     $null = Show-MessageBox $infoMessage 'Important Notice' -Buttons OK -Icon Information
     # Remove the trust from PSGallery Repository
     Set-PSRepository -Name "PSGallery" -InstallationPolicy Untrusted

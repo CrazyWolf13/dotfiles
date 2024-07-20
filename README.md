@@ -31,11 +31,13 @@ iex (iwr "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/pwsh/Micro
 - **Oh My Posh Integration**: Stylish prompts and Git status indicators.
 - **Deferred Loading**: Faster function loading.
 - **Automatic Installation**: Installs necessary modules on first execution.
+- **Local Caching**: Automatically downloads and updates the neccessary files into `$Home\unix-pwsh` to load faster and even while being offline.
 
 ## Components Installed 🛠️
 - **Terminal-Icons Module**: UI enhancements with icons.
 - **Powershell-Yaml**: YAML file configuration.
 - **PoshFunctions**: Essential PowerShell functions.
+- **NuGet**: Essential for installing the Pwsh Modules
 - **FiraCode Nerd Font**: Stylish font for code readability.
 - **Oh My Posh**: Customizable prompt themes.
 
@@ -46,7 +48,7 @@ iex (iwr "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/pwsh/Micro
 1. Paste: `iex (iwr "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1").Content`.
 2. Profile is automatically created and injected.
 3. Edit profile-file with `notepad $PROFILE`.
-4. Use `pwsh(Powershell Core) (Powershell 7.x +)` instead of `powershell` in Windows Terminal.
+4. Use `pwsh(Powershell Core) (Powershell 7.x +) (Powershell)` instead of `Microsoft Powershell` in Windows Terminal.
 5. Enjoy!
 
 ## Supported Linux Commands 🐧
