@@ -57,17 +57,6 @@ function Run-UpdatePowershell {
     Update-Powershell
 }
 
-function BackgroundTasks {
-    Start-Job -ScriptBlock {
-        . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-        Update-PowerShell
-        # Update the local cache of files
-        CheckScriptFilesForUpdates
-        Write-Host "🔄 Updated the local cache of files." -ForegroundColor Green
-    } 
-    # > $null 2>&1
-}
-
 # ----------------------------------------------------------------------------
 
 Write-Host ""
@@ -103,16 +92,6 @@ if (-not $?) { Write-Host "💭 Make sure to install WingetCommandNotFound by MS
 # Inject OhMyPosh
 oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
 
-
-
-# TEEEEST
-
-. Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
-Update-PowerShell
-# Update the local cache of files
-CheckScriptFilesForUpdates
-Write-Host "🔄 Updated the local cache of files." -ForegroundColor Green
-
 # ----------------------------------------------------------
 # Deferred loading
 # Source: https://fsackur.github.io/2023/11/20/Deferred-profile-loading-for-better-performance/
@@ -124,7 +103,8 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         . "$baseDir\custom_functions.ps1"
         . "$baseDir\functions.ps1"
         # Execute the background tasks
-        BackgroundTasks
+        Start-Job -ScriptBlock {. Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content ; BackgroundTasks}> $null 2>&1
+
     } else {
         if ($global:canConnectToGitHub) {
             #Load Custom Functions
@@ -132,7 +112,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
             #Load Functions
             . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
             # Update PowerShell in the background
-            BackgroundTasks
+            Start-Job -ScriptBlock {. Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content ; BackgroundTasks}> $null 2>&1
         } else {
             Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
         }
@@ -146,7 +126,7 @@ $Deferred = {
         . "$baseDir\custom_functions.ps1"
         . "$baseDir\functions.ps1"
         # Execute the background tasks
-        BackgroundTasks
+        Start-Job -ScriptBlock {. Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content ; BackgroundTasks}> $null 2>&1
     } else {
         if ($global:canConnectToGitHub) {
             #Load Custom Functions
@@ -154,7 +134,7 @@ $Deferred = {
             #Load Functions
             . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
             # Update PowerShell in the background
-            BackgroundTasks
+            Start-Job -ScriptBlock {. Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content ; BackgroundTasks}> $null 2>&1
         } else {
             Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
         }
