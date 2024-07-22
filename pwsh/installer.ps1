@@ -44,9 +44,14 @@ function Test-CreateProfile {
     # Create profile if not exists
     if (-not (Test-Path -Path $PROFILE)) {
         New-Item -ItemType File -Path $PROFILE | Out-Null
-        Add-Content -Path $PROFILE -Value 'try { . C:\Users\MTO\unix-pwsh\Microsoft.PowerShell_profile.ps1 2>$null | Out-Null } catch { } try { iex (iwr "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1").Content 2>$null | Out-Null } catch { }'        Write-Host "PowerShell profile created at $PROFILE." -ForegroundColor Yellow
+        Add-Content -Path $PROFILE -Value "try { . `"$env:userprofile\unix-pwsh\Microsoft.PowerShell_profile.ps1`" 2>`$null | Out-Null } catch { } try { iex (iwr `"https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1`").Content 2>`$null | Out-Null } catch { }"
+        Write-Host "PowerShell profile created at $PROFILE." -ForegroundColor Yellow
     }
 }
+
+
+
+
 
 function Initialize-DevEnv {
     $importedModuleCount = 0

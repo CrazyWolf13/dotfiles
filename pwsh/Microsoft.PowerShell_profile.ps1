@@ -42,15 +42,6 @@ If you have further questions, on how to set the above, don't hesitate to ask me
 # Functions
 # -----------------------------------------------------------------------------
 
-# Function to check if all the $files exist or not.
-$allFilesExist = $files | ForEach-Object { Join-Path -Path $baseDir -ChildPath $_ } | Test-Path -PathType Leaf -ErrorAction SilentlyContinue | ForEach-Object { $_ -eq $true }
-if ($allFilesExist -contains $false) {
-    $injectionMethod = "remote"
-} else {
-    $injectionMethod = "local"
-    $OhMyPoshConfig = Join-Path -Path $baseDir -ChildPath "montys.omp.json"
-}
-
 # Function for calling the update Powershell Script
 function Run-UpdatePowershell {
     . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
@@ -62,6 +53,15 @@ function Run-UpdatePowershell {
 Write-Host ""
 Write-Host "Welcome $name ⚡" -ForegroundColor $promptColor
 Write-Host ""
+
+# Function to check if all the $files exist or not.
+$allFilesExist = $files | ForEach-Object { Join-Path -Path $baseDir -ChildPath $_ } | Test-Path -PathType Leaf -ErrorAction SilentlyContinue | ForEach-Object { $_ -eq $true }
+if ($allFilesExist -contains $false) {
+    $injectionMethod = "remote"
+} else {
+    $injectionMethod = "local"
+    $OhMyPoshConfig = Join-Path -Path $baseDir -ChildPath "montys.omp.json"
+}
 
 # Check for dependencies and if not chainload the installer.
 if (Test-Path -Path $xConfigPath) {
@@ -103,8 +103,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         . "$baseDir\custom_functions.ps1"
         . "$baseDir\functions.ps1"
         # Execute the background tasks
-        Start-Job -ScriptBlock {. Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content ; BackgroundTasks}> $null 2>&1
-
+        Start-Process powershell -ArgumentList "-NoProfile -Command `"Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1' -UseBasicParsing).Content ; BackgroundTasks`"" -WindowStyle Hidden
     } else {
         if ($global:canConnectToGitHub) {
             #Load Custom Functions
