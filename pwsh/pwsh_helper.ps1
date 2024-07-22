@@ -1,5 +1,13 @@
 Write-Host "✅ Helper script invoked successfully" -ForegroundColor Green
 
+# Tasks to be executed in the background.
+function BackgroundTasks {
+    Update-PowerShell
+    # Update the local cache of files
+    CheckScriptFilesForUpdates
+    Write-Host "🔄 Updated the local cache of files." -ForegroundColor Green
+}
+
 # Function for downloading a file
 function DownloadFile($filename) {
     $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
