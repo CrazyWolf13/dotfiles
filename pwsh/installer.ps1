@@ -44,7 +44,7 @@ function Test-CreateProfile {
     # Create profile if not exists
     if (-not (Test-Path -Path $PROFILE)) {
         New-Item -ItemType File -Path $PROFILE | Out-Null
-        Add-Content -Path $PROFILE -Value "if (Test-Path (Join-Path -Path `$env:USERPROFILE -ChildPath `"unix-pwsh\Microsoft.PowerShell_profile.ps1`")) { . (Join-Path -Path `$env:USERPROFILE -ChildPath `"unix-pwsh\Microsoft.PowerShell_profile.ps1`") } else { iex (irm `"https://raw.githubusercontent.com/`$githubUser/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1`").Content }"
+        Add-Content -Path $PROFILE -Value "if (Test-Path (Join-Path -Path `$env:USERPROFILE -ChildPath `"unix-pwsh\Microsoft.PowerShell_profile.ps1`")) { . (Join-Path -Path `$env:USERPROFILE -ChildPath `"unix-pwsh\Microsoft.PowerShell_profile.ps1`") } else { iex (irm `"https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1`").Content }"
         Write-Host "PowerShell profile created at $PROFILE." -ForegroundColor Yellow
     }
 }
