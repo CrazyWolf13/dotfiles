@@ -38,6 +38,12 @@ These steps are necessary to ensure the pwsh profile works as intended.
 If you have further questions, on how to set the above, don't hesitate to ask me, by filing an issue on my repository, after you tried searching the web for yourself.
 "@
 
+$scriptBlock = {
+    param($githubUser, $files, $baseDir)
+    Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+    BackgroundTasks
+}
+
 # -----------------------------------------------------------------------------
 # Functions
 # -----------------------------------------------------------------------------
@@ -92,6 +98,7 @@ if (-not $?) { Write-Host "💭 Make sure to install WingetCommandNotFound by MS
 # Inject OhMyPosh
 oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
 
+
 # ----------------------------------------------------------
 # Deferred loading
 # Source: https://fsackur.github.io/2023/11/20/Deferred-profile-loading-for-better-performance/
@@ -103,16 +110,16 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         . "$baseDir\custom_functions.ps1"
         . "$baseDir\functions.ps1"
         # Execute the background tasks
-        Start-Process powershell -ArgumentList "-NoProfile -Command `"Invoke-Expression (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1' -UseBasicParsing).Content ; BackgroundTasks`"" -WindowStyle Hidden
-    } else {
+        Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir
+        } else {
         if ($global:canConnectToGitHub) {
             #Load Custom Functions
             . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
             #Load Functions
             . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
             # Update PowerShell in the background
-            Start-Job -ScriptBlock {. Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content ; BackgroundTasks}> $null 2>&1
-        } else {
+            Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir
+                } else {
             Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
         }
     }
@@ -125,16 +132,16 @@ $Deferred = {
         . "$baseDir\custom_functions.ps1"
         . "$baseDir\functions.ps1"
         # Execute the background tasks
-        Start-Job -ScriptBlock {. Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content ; BackgroundTasks}> $null 2>&1
-    } else {
+        Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir
+        } else {
         if ($global:canConnectToGitHub) {
             #Load Custom Functions
             . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
             #Load Functions
             . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
             # Update PowerShell in the background
-            Start-Job -ScriptBlock {. Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content ; BackgroundTasks}> $null 2>&1
-        } else {
+            Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir
+            } else {
             Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
         }
     }
