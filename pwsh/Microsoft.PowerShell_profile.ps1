@@ -103,6 +103,16 @@ if (-not $?) { Write-Host "💭 Make sure to install WingetCommandNotFound by MS
 # Inject OhMyPosh
 oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
 
+
+
+# TEEEEST
+
+. Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+Update-PowerShell
+# Update the local cache of files
+CheckScriptFilesForUpdates
+Write-Host "🔄 Updated the local cache of files." -ForegroundColor Green
+
 # ----------------------------------------------------------
 # Deferred loading
 # Source: https://fsackur.github.io/2023/11/20/Deferred-profile-loading-for-better-performance/
