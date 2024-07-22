@@ -6,6 +6,7 @@ function BackgroundTasks {
     # Update the local cache of files
     CheckScriptFilesForUpdates
     Write-Host "🔄 Updated the local cache of files." -ForegroundColor Green
+    calc.exe
 }
 
 # Function for downloading a file
