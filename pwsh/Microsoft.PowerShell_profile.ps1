@@ -39,7 +39,7 @@ If you have further questions, on how to set the above, don't hesitate to ask me
 "@
 
 $scriptBlock = {
-    param($githubUser, $files, $baseDir)
+    param($githubUser, $files, $baseDir, $canConnectToGitHub)
     Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
     BackgroundTasks
 }
@@ -110,7 +110,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         . "$baseDir\custom_functions.ps1"
         . "$baseDir\functions.ps1"
         # Execute the background tasks
-        Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir
+        Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub
         } else {
         if ($global:canConnectToGitHub) {
             #Load Custom Functions
@@ -118,7 +118,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
             #Load Functions
             . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
             # Update PowerShell in the background
-            Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir
+            Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub
                 } else {
             Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
         }
@@ -132,7 +132,7 @@ $Deferred = {
         . "$baseDir\custom_functions.ps1"
         . "$baseDir\functions.ps1"
         # Execute the background tasks
-        Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir
+        Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub
         } else {
         if ($global:canConnectToGitHub) {
             #Load Custom Functions
@@ -140,7 +140,7 @@ $Deferred = {
             #Load Functions
             . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
             # Update PowerShell in the background
-            Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir
+            Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub
             } else {
             Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
         }
