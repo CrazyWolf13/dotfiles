@@ -1,6 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
   "patch_pwsh_bleed": true,
+  "auto_upgrade": true,
   "blocks": [
     {
       "alignment": "left",
