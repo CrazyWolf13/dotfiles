@@ -143,28 +143,6 @@
                 "useAtlasEngine": true
             },
             {
-                "colorScheme": "Campbell",
-                "commandline": "\"C:\\Program Files\\PowerShell\\7\\pwsh.exe\"",
-                "elevate": true,
-                "guid": "{d5ebba3e-6e93-458f-b017-06915ba9f118}",
-                "hidden": false,
-                "icon": "ms-appx:///ProfileIcons/pwsh.png",
-                "name": "PowerShell 7 Admin",
-                "startingDirectory": "%USERPROFILE%"
-            },
-            {
-                "guid": "{af3192cc-cf4e-5bf7-9f70-71b7c939665b}",
-                "hidden": true,
-                "name": "Developer Command Prompt for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
-                "guid": "{5b59381e-3922-5d47-b080-5f9900e0ea68}",
-                "hidden": true,
-                "name": "Developer PowerShell for VS 2022",
-                "source": "Windows.Terminal.VisualStudio"
-            },
-            {
                 "guid": "{16208362-94fc-5b1f-a491-5b2624d5ab56}",
                 "hidden": true,
                 "name": "Visual Studio Debug Console",
