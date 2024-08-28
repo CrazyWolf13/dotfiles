@@ -102,3 +102,75 @@ function Test-vscode {
         }
     }
 }
+
+function top {
+   if ($host -and $host.UI.SupportsVirtualTerminal) {
+        Clear-Host
+        $lines = $Host.UI.RawUI.WindowSize.Height
+        $cols = $Host.UI.RawUI.WindowSize.Width
+        [int]$min = 10
+        $topCount = ($lines - $min)
+        if ($lines -le $min) {
+            $topCount = $lines 
+        }
+        $sortDesc = 'CPU'
+        $pp = $ProgressPreference
+        $ProgressPreference = "SilentlyContinue"
+        try {
+            while (1) {
+                $info = get-computerinfo
+                $pInuse = $info.OsTotalVisibleMemorySize - $info.OsFreePhysicalMemory
+                $phys = [math]::round(($info.OsTotalVisibleMemorySize/1MB),2)
+                $physuse = ($pInuse/$info.OsTotalVisibleMemorySize).toString("P")
+                $cpuAv = (Get-CimInstance -ClassName win32_processor | Measure-Object -Property LoadPercentage -Average).Average
+                write-host "system: $($info.CsCaption) uptime: $($info.OsUptime) OS version $($info.OsVersion) $($info.OSDisplayVersion)"
+                write-host "process: $($info.OsNumberOfProcesses) users: $($info.OsNumberOfUsers) Sort: $($sortDesc.PadRight(7))"
+                write-host "cpus: $($info.CsNumberOfLogicalProcessors) load: $($cpuAv)% Physical memory: $phys usage: $physUse"
+                Get-Process | Sort-Object -desc $sortDesc | Select-Object -first $topCount | format-table 
+                # if ($host.UI.RawUI.KeyAvailable) # doesn't work?
+                if ([Console]::KeyAvailable)
+                {
+                    $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+                    switch ($key.character) {
+                        'c'{
+                            $sortDesc = 'CPU'
+                        }
+                        'h' {
+                            $sortDesc = 'Handles'
+                        }
+                        'n'{
+                            $sortDesc = 'NPM'
+                        }
+                        'p' {
+                            $sortDesc = 'PM'
+                        }
+                        'q'{
+                            Clear-Host
+                            return
+                        }
+                        'w'{
+                            $sortDesc = 'WS'
+                        }
+                    }
+                }
+                else {                    
+                    Start-Sleep 0.5
+                }
+                if (($Host.UI.RawUI.WindowSize.Height -ne $lines) -or 
+                ($Host.UI.RawUI.WindowSize.Width -ne $cols)) {
+                    Clear-Host
+                    $lines = $Host.UI.RawUI.WindowSize.Height
+                    $cols = $Host.UI.RawUI.WindowSize.Width
+                    $topCount = ($lines - $min)
+                    if ($lines -le $min) {
+                        $topCount = $lines 
+                    }
+                }
+                $host.UI.RawUI.CursorPosition = @{x = 0; y = 0}
+            }
+        }
+        finally {
+            $ProgressPreference = $pp 
+        }
+    }
+}
