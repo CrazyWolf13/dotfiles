@@ -12,8 +12,8 @@ $xConfigPath = "$baseDir\pwsh_full_custom_config.yml" # This file exists if the 
 $githubUser = "CrazyWolf13" # Change this here if you forked the repository.
 $name= "Tobias"
 $promptColor = "DarkCyan" # Choose a color in which the hello text is colored; All Colors: Black, Blue, Cyan, DarkBlue, DarkCyan, DarkGray, DarkGreen, DarkMagenta, DarkRed, DarkYellow, Gray, Green, Magenta, Red, White, Yellow.
-$OhMyPoshConfig = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/montys.omp.json"
-
+$OhMyPoshConfig = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$OhMyPoshConfigFileName"
+$OhMyPoshConfigFileName = "montys.omp.json"
 $font="FiraCode" # Font-Display and variable Name, name the same as font_folder
 $font_url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip" # Put here the URL of the font file that should be installed
 $fontFileName = "FiraCodeNerdFontMono-Regular.ttf" # Put here the font file that should be installed
@@ -25,7 +25,7 @@ $modules = @(
     @{ Name = "Terminal-Icons"; ConfigKey = "Terminal-Icons_installed" },
     @{ Name = "PoshFunctions"; ConfigKey = "PoshFunctions_installed" }
 )
-$files = @("Microsoft.PowerShell_profile.ps1", "installer.ps1", "pwsh_helper.ps1", "custom_functions.ps1", "functions.ps1", "montys.omp.json")
+$files = @("Microsoft.PowerShell_profile.ps1", "installer.ps1", "pwsh_helper.ps1", "custom_functions.ps1", "functions.ps1", $OhMyPoshConfigFileName)
 
 # Message to tell the user what to do after installation
 $infoMessage = @"
@@ -66,7 +66,7 @@ if ($allFilesExist -contains $false) {
     $injectionMethod = "remote"
 } else {
     $injectionMethod = "local"
-    $OhMyPoshConfig = Join-Path -Path $baseDir -ChildPath "montys.omp.json"
+    $OhMyPoshConfig = Join-Path -Path $baseDir -ChildPath $OhMyPoshConfigFileName
 }
 
 # Check for dependencies and if not chainload the installer.

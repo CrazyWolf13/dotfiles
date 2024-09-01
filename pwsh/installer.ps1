@@ -51,8 +51,6 @@ function Test-CreateProfile {
 
 
 
-
-
 function Initialize-DevEnv {
     $importedModuleCount = 0
     foreach ($module in $modules) {
