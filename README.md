@@ -54,7 +54,7 @@ iex (iwr "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/pwsh/Micro
 ## Supported Linux Commands 🐧
 Aliases and functions for common Linux commands:
 
-- `sudo`, `cd`, `ls`, `dirs`, `sed`, `which`, `export`, `pgrep`, `grep`, `pkill`, `head`, `tail`, `unzip`, `du`, `ll`, `df`, `reboot`, `poweroff`, `cd...`, `cd....`, `md5`, `sha1`, `sha256`, `uptime`, `ssh-copy-key`, `explrestart`, `expl`, `Get-PubIP`, `Get-PrivIP`, `gitpush`, `ptw`.
+- `cd`, `ls`, `dirs`, `sed`, `which`, `export`, `pgrep`, `grep`, `pkill`, `head`, `tail`, `unzip`, `du`, `ll`, `df`, `reboot`, `poweroff`, `cd...`, `cd....`, `md5`, `sha1`, `sha256`, `uptime`, `ssh-copy-key`, `explrestart`, `expl`, `Get-PubIP`, `Get-PrivIP`, `gitpush`, `ptw`.
 
 ## License 📜
 This project is licensed under the [MIT License](LICENSE).
