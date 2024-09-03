@@ -156,17 +156,6 @@ Set-Alias poweroff Poweroff-System
 function cd... { Set-Location ..\.. }
 function cd.... { Set-Location ..\..\.. }
 
-# Function to run a command or shell as admin.
-function admin {
-    if ($args.Count -gt 0) {   
-        $argList = "& '" + $args + "'"
-        Start-Process "wt.exe" -Verb runAs -ArgumentList $argList
-    } else {
-        Start-Process "wt.exe" -Verb runAs
-    }
-}
-Set-Alias -Name sudo -Value admin
-
 # Hash functions
 function md5 {
     param (
