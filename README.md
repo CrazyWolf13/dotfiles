@@ -46,10 +46,14 @@ iex (iwr "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/pwsh/Micro
 
 ## Usage 🚀
 1. Paste: `iex (iwr "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/pwsh/Microsoft.PowerShell_profile.ps1").Content`.
-2. Profile is automatically created and injected.
-3. Edit profile-file with `notepad $PROFILE`.
-4. Use `pwsh(Powershell Core) (Powershell 7.x +) (Powershell)` instead of `Microsoft Powershell` in Windows Terminal.
-5. Enjoy!
+2. Profile is automatically created and injected, if not paste the below code, by editing profile-file with `notepad $PROFILE`.
+
+>```powershell
+> if (Test-Path (Join-Path -Path $env:USERPROFILE -ChildPath "unix-pwsh\Microsoft.PowerShell_profile.ps1")) { . (Join-Path -Path $env:USERPROFILE -ChildPath "unix-pwsh\Microsoft.PowerShell_profile.ps1") } else { iex (iwr "https://raw.githubusercontent.com/CrazyWolf13/dotfiles/main/Microsoft.PowerShell_profile.ps1").Content }
+>```
+
+3. Use `pwsh(Powershell Core) (Powershell 7.x +) (Powershell)` instead of `Microsoft Powershell` in Windows Terminal.
+4. Enjoy!
 
 ## Supported Linux Commands 🐧
 Aliases and functions for common Linux commands:
