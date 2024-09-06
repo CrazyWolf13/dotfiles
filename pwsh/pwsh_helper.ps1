@@ -10,7 +10,7 @@ function BackgroundTasks {
 
 # Function for downloading a file
 function DownloadFile($filename) {
-    $primaryUrl = "https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/$filename"
+    $primaryUrl = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
     $fallbackUrl = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/$filename"
 
     try {
