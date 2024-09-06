@@ -10,8 +10,22 @@ function BackgroundTasks {
 
 # Function for downloading a file
 function DownloadFile($filename) {
-    $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
-    Invoke-WebRequest -Uri $url -OutFile "$baseDir\$filename"
+    $primaryUrl = "https://raw.githubusercontent.com/$githubUser/unix-pwsh/main/$filename"
+    $fallbackUrl = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/$filename"
+
+    try {
+        # Attempt to download from the primary URL
+        Invoke-WebRequest -Uri $primaryUrl -OutFile "$baseDir\$filename" -ErrorAction Stop
+    } catch {
+        Write-Host "❌ Failed to download $filename from $primaryUrl. Trying fallback URL..." -ForegroundColor Yellow
+        
+        try {
+            # Attempt to download from the fallback URL if the primary URL fails
+            Invoke-WebRequest -Uri $fallbackUrl -OutFile "$baseDir\$filename" -ErrorAction Stop
+        } catch {
+            Write-Error "❌ Failed to download $filename from both primary and fallback URLs: $_"
+        }
+    }
 }
 
 # Function for checking and updating script files
