@@ -153,19 +153,31 @@ function Get-ConfigValue {
     return $config[$Key]
 }
 
+
 function Initialize-Module {
     param (
         [string]$moduleName
     )
-    if ($global:canConnectToGitHub) {
-        try {
-            Install-Module -Name $moduleName -Scope CurrentUser -SkipPublisherCheck
-            Set-ConfigValue -Key "${moduleName}_installed" -Value "True"
-        } catch {
-            Write-Error "❌ Failed to install module ${moduleName}: $_"
+    # Check if the module is already installed
+    $moduleInstalled = Get-Module -ListAvailable -Name $moduleName
+    
+    if ($null -eq $moduleInstalled) {
+        # Proceed only if the module is not installed
+        if ($global:canConnectToGitHub) {
+            try {
+                Install-Module -Name $moduleName -Scope CurrentUser -SkipPublisherCheck
+                Set-ConfigValue -Key "${moduleName}_installed" -Value "True"
+            } catch {
+                Write-Error "❌ Failed to install module ${moduleName}: $_"
+            }
+        } else {
+            Write-Host "❌ Skipping Module initialization check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
         }
     } else {
-        Write-Host "❌ Skipping Module initialization check due to GitHub.com not responding within 1 second." -ForegroundColor Yellow
+        # If the module is already installed, set the config value and import it
+        Set-ConfigValue -Key "${moduleName}_installed" -Value "True"
+        Import-Module -Name $moduleName
+        Write-Host "✅ Module $moduleName is already installed. Importing..."
     }
 }
 
