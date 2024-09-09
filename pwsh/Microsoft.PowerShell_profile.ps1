@@ -10,10 +10,12 @@ $baseDir = "$HOME\unix-pwsh"
 $configPath = "$baseDir\pwsh_custom_config.yml"
 $xConfigPath = "$baseDir\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
 $githubUser = "CrazyWolf13" # Change this here if you forked the repository.
+$githubRepo = "dotfiles" # Change this here if you forked the repository and changed the name.
+$githubBaseURL= "https://raw.githubusercontent.com/$githubUser/$githubRepo/main/pwsh"
 $name= "Tobias"
 $promptColor = "DarkCyan" # Choose a color in which the hello text is colored; All Colors: Black, Blue, Cyan, DarkBlue, DarkCyan, DarkGray, DarkGreen, DarkMagenta, DarkRed, DarkYellow, Gray, Green, Magenta, Red, White, Yellow.
 $OhMyPoshConfigFileName = "montys.omp.json"
-$OhMyPoshConfig = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$OhMyPoshConfigFileName"
+$OhMyPoshConfig = "$githubBaseURL/$OhMyPoshConfigFileName"
 $font="FiraCode" # Font-Display and variable Name, name the same as font_folder
 $font_url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip" # Put here the URL of the font file that should be installed
 $fontFileName = "FiraCodeNerdFontMono-Regular.ttf" # Put here the font file that should be installed
@@ -40,7 +42,7 @@ If you have further questions, on how to set the above, don't hesitate to ask me
 
 $scriptBlock = {
     param($githubUser, $files, $baseDir, $canConnectToGitHub)
-    Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+    Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/pwsh_helper.ps1" -UseBasicParsing).Content
     BackgroundTasks
 }
 
@@ -50,7 +52,7 @@ $scriptBlock = {
 
 # Function for calling the update Powershell Script
 function Run-UpdatePowershell {
-    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/pwsh_helper.ps1" -UseBasicParsing).Content
+    . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/pwsh_helper.ps1" -UseBasicParsing).Content
     Update-Powershell
 }
 
@@ -84,7 +86,7 @@ if (Test-Path -Path $xConfigPath) {
         Write-Host "❌ Skipping initialization due to GitHub not responding within 4 second." -ForegroundColor Red
         exit
     }
-    . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/installer.ps1" -UseBasicParsing).Content
+    . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/installer.ps1" -UseBasicParsing).Content
     Install-NuGet
     Test-Pwsh 
     Test-CreateProfile
@@ -114,9 +116,9 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         } else {
         if ($global:canConnectToGitHub) {
             #Load Custom Functions
-            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
+            . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/custom_functions.ps1" -UseBasicParsing).Content
             #Load Functions
-            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
+            . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/functions.ps1" -UseBasicParsing).Content
             # Update PowerShell in the background
             Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub
                 } else {
@@ -136,9 +138,9 @@ $Deferred = {
         } else {
         if ($global:canConnectToGitHub) {
             #Load Custom Functions
-            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/custom_functions.ps1" -UseBasicParsing).Content
+            . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/custom_functions.ps1" -UseBasicParsing).Content
             #Load Functions
-            . Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/functions.ps1" -UseBasicParsing).Content
+            . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/functions.ps1" -UseBasicParsing).Content
             # Update PowerShell in the background
             Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub
             } else {

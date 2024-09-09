@@ -10,7 +10,7 @@ function BackgroundTasks {
 
 # Function for downloading a file
 function DownloadFile($filename) {
-    $primaryUrl = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
+    $primaryUrl = "$githubBaseURL/$filename"
     $fallbackUrl = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/$filename"
 
     try {
@@ -31,7 +31,7 @@ function DownloadFile($filename) {
 # Function for checking and updating script files
 function CheckAndUpdateFile($filename) {
     $localFileContent = Get-Content "$baseDir\$filename" -Raw
-    $url = "https://raw.githubusercontent.com/$githubUser/dotfiles/main/pwsh/$filename"
+    $url = "$githubBaseURL/$filename"
     $remoteFileContent = Invoke-WebRequest -Uri $url | Select-Object -ExpandProperty Content
     if ($localFileContent -ne $remoteFileContent) {
         DownloadFile "$filename"
