@@ -121,6 +121,7 @@ function Initialize-DevEnv {
         . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/custom_functions.ps1" -UseBasicParsing).Content
         Test-vscode
     }  
+    Test-sudo
     Write-Host "✅ Successfully initialized Pwsh with all modules and applications`n" -ForegroundColor Green
     wt.exe -p "PowerShell"
     . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/pwsh_helper.ps1" -UseBasicParsing).Content
@@ -230,5 +231,21 @@ function Initialize-Keys {
     foreach ($key in $keys) {
         $value = Get-ConfigValue -Key $key
         Set-Variable -Name $key -Value $value -Scope Global
+    }
+}
+
+
+function Test-sudo {
+    if (Test-CommandExists sudo) {
+        Write-Host "✅ sudo is installed." -ForegroundColor Green
+    } else {
+        Write-Host "No sudo currently installed, would you like to install Gsudo by GerardoG (https://github.com/gerardog/gsudo)?" -ForegroundColor Yellow
+        $installGsudo = Read-Host "Do you want to install Gsudo? (Y/N)"
+        if ($installGsudo -eq 'Y' -or $installGsudo -eq 'y') {
+            winget install gerardog.gsudo
+            Write-Host "✅ Gsudo installed successfully." -ForegroundColor Green
+        } else {
+            Write-Host "❌ Gsudo installation skipped." -ForegroundColor Yellow
+        }
     }
 }
