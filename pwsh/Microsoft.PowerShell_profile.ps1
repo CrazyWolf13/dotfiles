@@ -1,3 +1,12 @@
+$githubUser = "CrazyWolf13" # Change this here if you forked the repository.
+$name= "Tobias" # Change this to your name.
+$githubRepo = "dotfiles" # Change this here if you forked the repository and changed the name.
+$githubBaseURL= "https://raw.githubusercontent.com/$githubUser/$githubRepo/main"
+$OhMyPoshConfigFileName = "montys.omp.json" # Filename of the OhMyPosh config file
+$OhMyPoshConfig = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/$OhMyPoshConfigFileName" # URL of the OhMyPosh config file, make sure to use the last part of the raw lik, (stands for the filename) in the variable on the line below
+
+# -----------------------------------------------------------------------------
+
 # Check internet access
 # Use wmi as there is no timeout in pwsh  5.0 and generally slow.
 $timeout = 1000 
@@ -9,13 +18,7 @@ else {$canConnectToGitHub = $false}
 $baseDir = "$HOME\unix-pwsh"
 $configPath = "$baseDir\pwsh_custom_config.yml"
 $xConfigPath = "$baseDir\pwsh_full_custom_config.yml" # This file exists if the prompt is fully installed with all dependencies.
-$githubUser = "CrazyWolf13" # Change this here if you forked the repository.
-$githubRepo = "dotfiles" # Change this here if you forked the repository and changed the name.
-$githubBaseURL= "https://raw.githubusercontent.com/$githubUser/$githubRepo/main/pwsh"
-$name= "Tobias"
 $promptColor = "DarkCyan" # Choose a color in which the hello text is colored; All Colors: Black, Blue, Cyan, DarkBlue, DarkCyan, DarkGray, DarkGreen, DarkMagenta, DarkRed, DarkYellow, Gray, Green, Magenta, Red, White, Yellow.
-$OhMyPoshConfigFileName = "montys.omp.json"
-$OhMyPoshConfig = "$githubBaseURL/$OhMyPoshConfigFileName"
 $font="FiraCode" # Font-Display and variable Name, name the same as font_folder
 $font_url = "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip" # Put here the URL of the font file that should be installed
 $fontFileName = "FiraCodeNerdFontMono-Regular.ttf" # Put here the font file that should be installed

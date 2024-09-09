@@ -9,6 +9,7 @@ function Test-ExecPolicy {
     }
 }
 
+
 function Install-NuGet {
     # Install NuGet to ensure the other packages can be installed.
     $nugetProvider = Get-PackageProvider -Name NuGet -ErrorAction SilentlyContinue
@@ -23,6 +24,8 @@ function Install-NuGet {
     # Trust the PSGallery repository for while installing this powershell profile.
     Set-PSRepository -Name "PSGallery" -InstallationPolicy Trusted
 }
+
+
 function Test-Pwsh {
     if (-not (Get-Command pwsh -ErrorAction SilentlyContinue)) {
         Write-Host "PowerShell Core (pwsh) is not installed. Starting the update..." -ForegroundColor Yellow
@@ -88,7 +91,6 @@ $currentContent = $currentContent -replace 'if\s*\(\s*Test-Path\s*\(\s*Join-Path
 }
 
 
-
 function Initialize-DevEnv {
     $importedModuleCount = 0
     foreach ($module in $modules) {
@@ -114,11 +116,11 @@ function Initialize-DevEnv {
         . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/pwsh_helper.ps1" -UseBasicParsing).Content
         Test-$font
     }
-    if ($vscode_installed -ne "True") { 
+    if (Test-Path Variable:vscode_installed -and $vscode_installed -ne "True") { 
         . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/pwsh_helper.ps1" -UseBasicParsing).Content
         . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/custom_functions.ps1" -UseBasicParsing).Content
-        Test-vscode 
-        }
+        Test-vscode
+    }
     Write-Host "✅ Successfully initialized Pwsh with all modules and applications`n" -ForegroundColor Green
     wt.exe -p "PowerShell"
     . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/pwsh_helper.ps1" -UseBasicParsing).Content
@@ -128,6 +130,7 @@ function Initialize-DevEnv {
     Set-PSRepository -Name "PSGallery" -InstallationPolicy Untrusted
     exit
 }
+
 
 # Function to create config file
 function Install-Config {
@@ -146,6 +149,7 @@ function Install-Config {
     Initialize-Keys
     Initialize-DevEnv
 }
+
 
 # Function to set a value in the config file
 function Set-ConfigValue {
@@ -170,6 +174,7 @@ function Set-ConfigValue {
     # Write-Host "Set '$Key' to '$Value' in configuration file." -ForegroundColor Green
     Initialize-Keys
 }
+
 
 # Function to get a value from the config file
 function Get-ConfigValue {
@@ -218,6 +223,7 @@ function Initialize-Module {
         Write-Host "✅ Module $moduleName is already installed. Importing..."
     }
 }
+
 
 function Initialize-Keys {
     $keys = "Terminal-Icons_installed", "Powershell-Yaml_installed", "PoshFunctions_installed", "${font}_installed", "vscode_installed", "ohmyposh_installed"
