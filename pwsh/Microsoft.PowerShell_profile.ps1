@@ -93,7 +93,7 @@ if (Test-Path -Path $xConfigPath) {
 
 # Try to import MS PowerToys WinGetCommandNotFound
 Import-Module -Name Microsoft.WinGet.CommandNotFound > $null 2>&1
-if (-not $?) { Write-Host "💭 Make sure to install WingetCommandNotFound by MS PowerToys" -ForegroundColor Yellow }
+if (-not $?) {Install-Module -Name Microsoft.WinGet.CommandNotFound}
 
 # Inject OhMyPosh
 oh-my-posh init pwsh --config $OhMyPoshConfig | Invoke-Expression
