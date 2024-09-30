@@ -115,7 +115,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
         . "$baseDir\custom_functions.ps1"
         . "$baseDir\functions.ps1"
         # Execute the background tasks
-        Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub
+        Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub, $githubBaseURL
         } else {
         if ($global:canConnectToGitHub) {
             #Load Custom Functions
@@ -123,7 +123,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
             #Load Functions
             . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/functions.ps1" -UseBasicParsing).Content
             # Update PowerShell in the background
-            Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub
+            Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub, $githubBaseURL
                 } else {
             Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
         }
@@ -137,7 +137,7 @@ $Deferred = {
         . "$baseDir\custom_functions.ps1"
         . "$baseDir\functions.ps1"
         # Execute the background tasks
-        Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub
+        Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub, $githubBaseURL
         } else {
         if ($global:canConnectToGitHub) {
             #Load Custom Functions
@@ -145,7 +145,7 @@ $Deferred = {
             #Load Functions
             . Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/functions.ps1" -UseBasicParsing).Content
             # Update PowerShell in the background
-            Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub
+            Start-Job -ScriptBlock $scriptBlock -ArgumentList $githubUser, $files, $baseDir, $canConnectToGitHub, $githubBaseURL
             } else {
             Write-Host "❌ Skipping initialization due to GitHub not responding within 1 second." -ForegroundColor Red
         }
