@@ -44,7 +44,7 @@ If you have further questions, on how to set the above, don't hesitate to ask me
 "@
 
 $scriptBlock = {
-    param($githubUser, $files, $baseDir, $canConnectToGitHub)
+    param($githubUser, $files, $baseDir, $canConnectToGitHub, $githubBaseURL)
     Invoke-Expression (Invoke-WebRequest -Uri "$githubBaseURL/pwsh_helper.ps1" -UseBasicParsing).Content
     BackgroundTasks
 }
