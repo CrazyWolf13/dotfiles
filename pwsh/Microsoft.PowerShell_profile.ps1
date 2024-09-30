@@ -11,8 +11,11 @@ $OhMyPoshConfig = "$githubBaseURL/$OhMyPoshConfigFileName" # URL of the OhMyPosh
 # Use wmi as there is no timeout in pwsh  5.0 and generally slow.
 $timeout = 1000 
 $pingResult = Get-CimInstance -ClassName Win32_PingStatus -Filter "Address = 'github.com' AND Timeout = $timeout" -Property StatusCode 2>$null
-if ($pingResult.StatusCode -eq 0) {$canConnectToGitHub = $true} 
-else {$canConnectToGitHub = $false}
+if ($pingResult.StatusCode -eq 0) {
+    $canConnectToGitHub = $true
+} else {
+    $canConnectToGitHub = $false
+}
 
 # Define vars.
 $baseDir = "$HOME\unix-pwsh"
