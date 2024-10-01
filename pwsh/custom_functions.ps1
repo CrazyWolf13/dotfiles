@@ -18,12 +18,6 @@ if (Test-Path "HKCU:\SOFTWARE\Microsoft\OneDrive\Accounts\Business1") {
     function cdhalter {Set-Location "$onedrive_Path\Dokumente\Daten\Halter"}
 }
 
-function ssh-m122 {
-    param ([string]$ip)
-    ssh -i ~\.ssh\06-student.pem -o ServerAliveInterval=30 "ubuntu@$ip"
-}
-
-
 function gitpush {
     git pull
     git add .
