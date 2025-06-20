@@ -295,3 +295,18 @@ function top {
         }
     }
 }
+
+function touch {
+    param (
+        [Parameter(Mandatory = $true, ValueFromRemainingArguments = $true)]
+        [string[]]$files
+    )
+
+    foreach ($file in $files) {
+        if (Test-Path $file) {
+            (Get-Item $file).LastWriteTime = Get-Date
+        } else {
+            New-Item -ItemType File -Path $file | Out-Null
+        }
+    }
+}
