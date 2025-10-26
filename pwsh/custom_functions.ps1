@@ -7,7 +7,7 @@ function Get-PubIP { (Invoke-WebRequest http://ifconfig.me/ip).Content }
 function Get-PrivIP { (Get-NetIPAddress | Where-Object -Property AddressFamily -EQ -Value "IPv4").IPAddress }
 
 # Folder shortcuts
-function cdgit {Set-Location "E:\Informatik\Projekte"}
+function cdgit {Set-Location "G:\Informatik\Projekte"}
 
 if (Test-Path "HKCU:\SOFTWARE\Microsoft\OneDrive\Accounts\Business1") {
     $onedriveProperty = Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\OneDrive\Accounts\Business1"
